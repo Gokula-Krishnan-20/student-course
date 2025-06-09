@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from '../../model/course.model';
 import { CourseService } from '../../services/courses.service';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { StudentService } from '../../services/student.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-courses',
-  standalone:true,
-  imports: [FormsModule, RouterLink,RouterModule,CommonModule],
+  standalone: true,
+  imports: [FormsModule, RouterModule, CommonModule],
   providers: [CourseService, StudentService],
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.css']
@@ -19,8 +19,7 @@ export class CoursesComponent implements OnInit {
   filteredCourses: Course[] = [];
   searchTerm: string = '';
   selectedDepartment: string = 'All';
-  minRating: number = 0;  // optional, use if rating data available
-  enrolledCourseIds: string[] = [];
+  enrolledCourseCodes: string[] = [];
 
   departments: string[] = ['All', 'Computer Science', 'Business', 'Engineering'];
 
@@ -31,24 +30,22 @@ export class CoursesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Load student enrolled courses first
-    const student = this.studentService.getStudentValue();
-    if (student) {
-      this.enrolledCourseIds = student.enrolledCourses || [];
+  this.studentService.getStudent().subscribe(student => {
+    this.enrolledCourseCodes = student.enrolledCourses || [];
+  });
+
+  this.courseService.getAllCourses().subscribe({
+    next: (courses) => {
+      this.courses = courses;
+      this.applyFilters();
+    },
+    error: (err) => {
+      console.error('Error loading courses:', err);
+      this.courses = [];
+      this.filteredCourses = [];
     }
-    // Load all courses from service
-    this.courseService.getAllCourses().subscribe({
-      next: (courses) => {
-        this.courses = courses;
-        this.applyFilters();
-      },
-      error: (err) => {
-        console.error('Error loading courses:', err);
-        this.courses = [];
-        this.filteredCourses = [];
-      }
-    });
-  }
+  });
+}
 
   search(): void {
     this.applyFilters();
@@ -56,54 +53,72 @@ export class CoursesComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredCourses = this.courses.filter(course => {
+      const search = this.searchTerm.toLowerCase();
       const matchesSearch =
-        course.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        course.department.toLowerCase().includes(this.searchTerm.toLowerCase());
+        course.courseName.toLowerCase().includes(search) ||
+        course.department.toLowerCase().includes(search);
+
       const matchesDepartment =
         this.selectedDepartment === 'All' || course.department === this.selectedDepartment;
-      // If rating exists on course, use this line; else remove it
-      // const matchesRating = this.minRating === 0 || (course.rating && course.rating >= this.minRating);
-      return matchesSearch && matchesDepartment 
+
+      return matchesSearch && matchesDepartment;
     });
   }
 
-  isEnrolled(courseId: string): boolean {
-    return this.enrolledCourseIds.includes(courseId);
+  isEnrolled(courseCode: string): boolean {
+    return this.enrolledCourseCodes.includes(courseCode);
   }
 
-  confirmEnroll(courseId: string): void {
-  if (this.isEnrolled(courseId)) return;
+  confirmEnroll(courseCode: string): void {
+  if (this.isEnrolled(courseCode)) return;
 
-  const confirmed = window.confirm("Are you sure you want to enroll in this course?");
-  console.log('User confirmed?', confirmed);
+  const confirmed = window.confirm('Are you sure you want to enroll in this course?');
   if (confirmed) {
-    // const student = this.studentService.getStudentValue();
-    // if (student) {
-      this.studentService.enrollCourse('STU001', courseId).subscribe({
-        next: (res) => {
-  console.log('Enrollment response:', res);  // ✅ Add this
-  if (res && res.enrolledCourses) {
-    this.studentService.updateStudentEnrolledCourses(res.enrolledCourses);
-    this.enrolledCourseIds = res.enrolledCourses;
-    alert('Enrolled successfully!');
-  } else {
-    alert('Enrollment response is invalid.');
-  }
-},
-        error: (err) => {
-          console.error('Enrollment failed:', err);
-          alert('Something went wrong while enrolling.');
+    const studentId = 'STU001';
+
+    this.studentService.enrollCourse(studentId, courseCode).subscribe({
+      next: (res) => {
+        if (res && res.message === 'Enrollment successful') {
+          // Immutable update so Angular detects change
+          this.enrolledCourseCodes = [...this.enrolledCourseCodes, courseCode];
+          this.studentService.updateStudentEnrolledCourses(this.enrolledCourseCodes);
+          alert('Enrolled successfully!');
+        } else {
+          alert('Enrollment response invalid.');
         }
-      });
-    // }
-    // else{
-      // console.log("no student")
-    // }
+      },
+      error: (err) => {
+        console.error('Enrollment failed:', err);
+        alert('Something went wrong while enrolling.');
+      }
+    });
   }
-  
 }
 
-  viewCourse(courseId: string): void {
-    this.router.navigate(['/courses', courseId]);
+
+confirmUnenroll(courseCode: string): void {
+  const confirmed = window.confirm('Are you sure you want to unenroll from this course?');
+  if (confirmed) {
+    const studentId = 'STU001';
+
+    this.studentService.unenrollCourse(studentId, courseCode).subscribe({
+      next: (res) => {
+        // Immutable update
+        this.enrolledCourseCodes = this.enrolledCourseCodes.filter(code => code !== courseCode);
+        this.studentService.updateStudentEnrolledCourses(this.enrolledCourseCodes);
+        alert('Unenrolled successfully!');
+      },
+      error: (err) => {
+        console.error('Unenrollment failed:', err);
+        alert('Something went wrong while unenrolling.');
+      }
+    });
+  }
+}
+
+
+
+  viewCourse(courseCode: string): void {
+    this.router.navigate(['/courses', courseCode]);
   }
 }

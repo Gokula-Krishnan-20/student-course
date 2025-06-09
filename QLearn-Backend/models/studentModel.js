@@ -1,20 +1,11 @@
-// models/studentModel.js
 const mongoose = require('mongoose');
 
-const progressSchema = new mongoose.Schema({
-  courseId: String,
-  completedModules: [String],
-  lastAccessed: Date
-});
-
-const studentSchema = new mongoose.Schema({
+const StudentSchema = new mongoose.Schema({
+  studentId: { type: String, unique: true },
   name: String,
-  email: String,
-  studentId: String,
   department: String,
-  phone: String,
+  email: String,
   enrolledCourses: [String],
-  progress: [progressSchema]
 });
 
-module.exports =  mongoose.model('Student', studentSchema, 'student');
+module.exports = mongoose.model('Student', StudentSchema);

@@ -15,26 +15,23 @@
 
   <!-- Enrolled Courses Cards -->
   <div *ngIf="enrolledCourses.length > 0" class="row">
-    <div class="col-md-4 mb-4" *ngFor="let course of enrolledCourses">
-      <div class="card h-100">
+    <div class="col-md-6 mb-4" *ngFor="let course of enrolledCourses">
+      <div class="card h-100 shadow-sm border-0">
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title">{{ course.title }}</h5>
-          <p class="card-text"><strong>Department:</strong> {{ course.department }}</p>
-
-          <!-- Progress Bar -->
-          <div class="progress mb-2" style="height: 10px;">
-            <div class="progress-bar bg-success" role="progressbar"
-                 [style.width.%]="getCompletedPercentage(course)" 
-                 aria-valuemin="0" aria-valuemax="100" 
-                 [attr.aria-valuenow]="getCompletedPercentage(course)">
-            </div>
-          </div>
-          <p class="text-muted small mb-3">
-            {{ getCompletedPercentage(course) }}% Completed
+          <h5 class="card-title text-primary">{{ course.courseName }}</h5>
+          <p class="card-text text-muted mb-2">
+            <strong>Course Code:</strong> {{ course.courseCode }}<br>
+            <strong>Department:</strong> {{ course.department }}<br>
+            <strong>Instructor ID:</strong> {{ course.instructorId }}<br>
+            <strong>Seats:</strong> {{ course.numberOfSeats }}<br>
+            <strong>Enroll Period:</strong>
+            {{ course.enrollPeriod.startDate | date:'MMM d, y' }} -
+            {{ course.enrollPeriod.endDate | date:'MMM d, y' }}
           </p>
+          <p class="text-secondary small">{{ course.courseDescription }}</p>
 
-          <div class="mt-auto card-footer bg-transparent border-0 p-0">
-            <button class="btn btn-outline-primary w-100" (click)="viewModules(course.code)">
+          <div class="mt-auto">
+            <button class="btn btn-outline-primary w-100" (click)="viewModules(course.courseCode)">
               View Modules
             </button>
           </div>

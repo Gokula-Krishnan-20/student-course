@@ -1,34 +1,35 @@
-import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
-import { RouterLink, RouterModule, RouterLinkActive, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [RouterLink,RouterModule,RouterLinkActive,CommonModule],
+  imports: [ RouterModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-  dropdownOpen = false;
-  studentNameFirstLetter = 'J'; // Replace with actual first letter of logged-in student
+  studentNameFirstLetter = 'J'; // Replace this with real data
+  isDropdownOpen = false;
 
   constructor(private router: Router) {}
 
   toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  @HostListener('document:click', ['$event'])
-  closeDropdownOutside(event: Event) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.profile-menu')) {
-      this.dropdownOpen = false;
-    }
+  closeDropdown() {
+    this.isDropdownOpen = false;
   }
 
   logout() {
-    // Add your logout logic here
+    this.closeDropdown();
     this.router.navigate(['/login']);
   }
+
+  goToProfile() {
+    this.closeDropdown();
+    this.router.navigate(['/student/student-detail']);
+  }
 }
+

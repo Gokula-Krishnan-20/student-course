@@ -1,7 +1,8 @@
 export interface Instructor {
   _id: string;
+  instructorId: string;
   name: string;
   email: string;
   department: string;
-  // Add other fields if your employee model has more
+  coursesTaken: string[]; // Array of course codes
 }

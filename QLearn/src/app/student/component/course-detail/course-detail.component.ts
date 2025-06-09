@@ -3,11 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '../../services/courses.service';
 import { CommonModule } from '@angular/common';
 import { Course } from '../../model/course.model';
+import { AsyncPipe, DatePipe, NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-course-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgIf, NgFor],
   templateUrl: './course-detail.component.html',
   styleUrls: ['./course-detail.component.css']
 })
@@ -22,7 +23,7 @@ export class CourseDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.courseCode = this.route.snapshot.paramMap.get('id')!; // assuming route param is named 'id'
+    this.courseCode = this.route.snapshot.paramMap.get('id')!;
     this.courseService.getCourseByCode(this.courseCode).subscribe({
       next: (course) => {
         this.course = course;
@@ -35,6 +36,6 @@ export class CourseDetailComponent implements OnInit {
   }
 
   goToCoursePage(): void {
-    this.router.navigate(['/student/courses']); // or '/courses' based on your routing setup
+    this.router.navigate(['/student/courses']);
   }
 }

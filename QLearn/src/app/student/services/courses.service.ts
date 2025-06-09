@@ -5,21 +5,21 @@ import { Course } from '../model/course.model';
 
 @Injectable({ providedIn: 'root' })
 export class CourseService {
-  private apiUrl = 'http://localhost:3000/api/student/courses'; // keep as you had
+  private apiUrl = 'http://localhost:3000/api/courses'; // updated to match backend routes
 
   constructor(private http: HttpClient) {}
 
-  // Get all courses
+  // ✅ Get all courses
   getAllCourses(): Observable<Course[]> {
     return this.http.get<Course[]>(this.apiUrl);
   }
 
-  // Get course by course code
   getCourseByCode(code: string): Observable<Course> {
     return this.http.get<Course>(`${this.apiUrl}/code/${code}`);
   }
 
-  // Get modules of a course by course code
+
+  // ✅ Get modules by course code
   getCourseModules(code: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/code/${code}/modules`);
   }

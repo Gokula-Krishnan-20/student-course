@@ -20,27 +20,24 @@ export class StudentDetailComponent implements OnInit {
   constructor(private studentService: StudentService) {}
 
   ngOnInit(): void {
-    // Explicitly load STU001
+    // Load and set student
     this.studentService.loadStudent(this.studentId);
-
-    // Subscribe to student data
     this.studentService.getStudent().subscribe({
-      next: (studentData) => {
-        if (studentData) {
-          this.student = studentData;
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching student:', err);
-      }
+      next: (data) => this.student = data,
+      error: (err) => console.error('Error fetching student:', err)
     });
   }
 
   toggleEdit(): void {
     if (this.isEditing) {
       this.editableStudent = null;
-    } else {
-      this.editableStudent = { ...this.student! };
+    } else if (this.student) {
+      this.editableStudent = {
+        ...this.student,
+        studentId: this.student.studentId,
+        email: this.student.email,
+        enrolledCourses: this.student.enrolledCourses
+      };
     }
     this.isEditing = !this.isEditing;
   }
@@ -54,9 +51,7 @@ export class StudentDetailComponent implements OnInit {
         this.editableStudent = null;
         this.isEditing = false;
       },
-      error: (err) => {
-        console.error('Error saving student:', err);
-      }
+      error: (err) => console.error('Error saving student:', err)
     });
   }
 }

@@ -1,25 +1,21 @@
 const mongoose = require('mongoose');
 
-const moduleSchema = new mongoose.Schema({
-  id: String, // 👈 manual ID like "mod1"
+const ModuleSchema = new mongoose.Schema({
   title: String,
   description: String,
-  pdfUrl: String
 });
 
-const courseSchema = new mongoose.Schema({
-  title: String,
-  code: String,
-  description: String,
+const CourseSchema = new mongoose.Schema({
+  courseName: String,
+  courseDescription: String,
+  courseCode: { type: String, unique: true },
+  enrollPeriod: {
+    startDate: Date,
+    endDate: Date,
+  },
+  modules: [ModuleSchema],
   department: String,
-  semester: String,
-  credits: Number,
-  level: String,
-  prerequisites: String,
-  instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
-  createdAt: { type: Date, default: Date.now },
-  modules: [moduleSchema]
+  numberOfSeats: Number,
 });
 
-module.exports = mongoose.model('Course', courseSchema , 'course');
-// module.exports = courseModel;
+module.exports = mongoose.model('Course', CourseSchema);

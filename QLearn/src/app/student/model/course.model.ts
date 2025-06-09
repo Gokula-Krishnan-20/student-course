@@ -1,17 +1,18 @@
 import { CourseModule } from './module.model';
-import { Instructor } from './instructor.model';
+
+export interface EnrollPeriod {
+  startDate: string;
+  endDate: string;
+}
 
 export interface Course {
   _id?: string;
-  title: string;
-  code: string;
-  description: string;
+  courseName: string;
+  courseDescription: string;
+  courseCode: string;
   department: string;
-  semester: string;
-  credits: number;
-  level: string;
-  prerequisites: string;
-  instructor: Instructor;
-  createdAt: string;
+  numberOfSeats: number;
+  enrollPeriod: EnrollPeriod;
   modules: CourseModule[];
+  instructorId: string;
 }
