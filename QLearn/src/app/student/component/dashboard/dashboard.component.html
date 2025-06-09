@@ -1,0 +1,41 @@
+<div class="container dashboard py-4">
+  <div class="container-fluid mb-4" data-aos="fade-down">
+    <div class="card profile-header-card p-4">
+      <div class="row align-items-center mb-3">
+        <div class="col-auto">
+          <img [src]="avatarUrl" alt="Avatar of {{ student?.name }}" class="profile-avatar-lg" />
+        </div>
+        <div class="col">
+          <h1 class="hello-text">Hello, {{ student?.name }}</h1>
+        </div>
+      </div>
+
+      <div class="row text-muted info-row ps-2">
+        <div class="col-md-auto mb-2">
+          <small><strong>Department:</strong> {{ student?.department }}</small>
+        </div>
+        <div class="col-md-auto mb-2">
+          <small><strong>Email:</strong> {{ student?.email }}</small>
+        </div>
+        <div class="col-md-auto mb-2">
+          <small><strong>Enrolled Courses:</strong> {{ student?.enrolledCourses }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6" data-aos="zoom-in">
+      <div echarts [options]="courseCompletionOptions" class="chart-box"></div>
+    </div>
+    <div class="col-md-6" data-aos="zoom-in">
+      <div echarts [options]="dailyLearningOptions" class="chart-box"></div>
+    </div>
+    <div class="col-md-6" data-aos="zoom-in">
+      <div echarts [options]="departmentChartOptions" class="chart-box"></div>
+    </div>
+    <div class="col-md-6" data-aos="zoom-in">
+      <div echarts [options]="topCoursesOptions" class="chart-box"></div>
+    </div>
+  </div>
+</div>

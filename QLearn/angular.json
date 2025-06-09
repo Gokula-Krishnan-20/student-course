@@ -21,10 +21,28 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/favicon.ico",
+              "src/assets",
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/",
+                "output": "assets/ngx-extended-pdf-viewer/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-markdown/assets/",
+                "output": "assets/ngx-markdown/"
+              },
+              {
+              "glob": "**/*",
+              "input": "node_modules/ngx-extended-pdf-viewer/assets/",
+              "output": "assets/"
+            }
             ],
             "styles": [
               "src/styles.css"
@@ -92,5 +110,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "e03327b6-a6b1-4e4a-902a-302e11118104"
   }
 }

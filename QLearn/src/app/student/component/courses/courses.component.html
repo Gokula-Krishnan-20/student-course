@@ -1,0 +1,47 @@
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary" data-aos="fade-up">Available Courses</h2>
+
+  <!-- Search + Filter -->
+  <div class="row g-3 align-items-center mb-4" data-aos="fade-up">
+    <div class="col-md-6">
+      <input
+        class="form-control shadow-sm"
+        placeholder="Search by course name or department"
+        [(ngModel)]="searchTerm"
+        (input)="search()"
+      />
+    </div>
+    <div class="col-md-6">
+      <select class="form-select shadow-sm" [(ngModel)]="selectedDepartment" (change)="search()">
+        <option *ngFor="let dept of departments">{{ dept }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Course Cards -->
+  <div class="row">
+    <div
+      class="col-md-6 col-lg-4 mb-4"
+      *ngFor="let course of filteredCourses"
+      data-aos="zoom-in"
+    >
+      <div class="card h-100 course-card border-0 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title text-primary">{{ course.title }}</h5>
+          <p class="mb-2"><strong>Department:</strong> {{ course.department }}</p>
+          <div class="mt-auto d-flex justify-content-between">
+            <button
+      class="btn"
+      [ngClass]="isEnrolled(course.code) ? 'btn-success' : 'btn-outline-primary me-2'"
+      [disabled]="isEnrolled(course.code)"
+      (click)="confirmEnroll(course.code)">
+      {{ isEnrolled(course.code) ? 'Enrolled' : 'Enroll' }}
+      </button>
+
+            <a [routerLink]="[course.code]" class="btn btn-outline-secondary btn-sm">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+
+    <div class="profile-menu" (click)="toggleDropdown()" (document:click)="closeDropdownOutside($event)">
+  <div class="profile-icon">
+    {{ studentNameFirstLetter }}
+  </div>
+  <ul class="dropdown-menu" [class.show]="dropdownOpen">
+    <li><a class="dropdown-item" routerLink="student/student-detail"  
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      Profile
+    </a></li>
+    <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+  </ul>
+</div>

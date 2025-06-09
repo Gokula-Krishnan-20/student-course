@@ -1,0 +1,38 @@
+h3 {
+  font-weight: 700;
+  color: #343a40;
+}
+
+.form-check-label {
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.alert {
+  font-size: 1.2rem;
+}
+.list-group-item.active {
+  background-color: #0d6efd;
+  color: white;
+}
+.alert-success {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.list-group-item.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.alert-success {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+ngx-extended-pdf-viewer {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+h5 {
+  font-size: 1.25rem;
+}

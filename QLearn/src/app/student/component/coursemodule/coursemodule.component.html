@@ -1,0 +1,56 @@
+<div class="row">
+  <!-- Module List with Checkboxes -->
+  <div class="col-md-3 border-end p-0">
+    <div class="h-100 overflow-auto p-3">
+      <ul class="list-group" *ngIf="modules.length > 0; else noModules">
+        <li *ngFor="let module of modules; let i = index"
+            class="list-group-item d-flex justify-content-between align-items-center"
+            [class.active]="i === currentIndex"
+            (click)="setCurrentModule(i)">
+          <span>{{ module.title }}</span>
+          <input type="checkbox" class="form-check-input ms-2"
+                 [checked]="module.completed"
+                 (click)="$event.stopPropagation()" disabled>
+        </li>
+      </ul>
+      <ng-template #noModules>
+        <p>No modules available.</p>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- PDF Viewer and Description -->
+  <div class="col-md-9 d-flex flex-column p-0" *ngIf="!completed; else finished">
+    <div class="p-3 border-bottom" *ngIf="currentModule">
+      <h5>{{ currentModule.title }}</h5>
+      <p class="text-muted">{{ currentModule.description }}</p>
+    </div>
+
+    <div class="flex-grow-1 overflow-auto p-3">
+      <ngx-extended-pdf-viewer
+        [src]="pdfsrc"
+        useBrowserLocale="true"
+        height="100%"
+        [textLayer]="true"
+        [showSidebarButton]="true">
+      </ngx-extended-pdf-viewer>
+    </div>
+
+    <div class="text-end border-top p-3">
+      <button class="btn btn-primary" (click)="onNext()">
+        {{ isLastModule() ? 'Finish' : 'Next' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Finish Message -->
+  <ng-template #finished>
+    <div class="d-flex align-items-center justify-content-center h-100 text-center p-5">
+      <div>
+        <h2 class="text-success">🎉 Congratulations!</h2>
+        <p>You have completed all the modules.</p>
+        <p>Redirecting you back to your learning dashboard...</p>
+      </div>
+    </div>
+  </ng-template>
+</div>

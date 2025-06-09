@@ -1,0 +1,13 @@
+<div class="pdf-container">
+  <ngx-extended-pdf-viewer
+  [src]="currentModule?.pdfUrl ?? ''"
+  useBrowserLocale="true"
+  height="100%"
+  [textLayer]="true"
+  [showSidebarButton]="true"
+  baseHref="https://unpkg.com/ngx-extended-pdf-viewer@18.4.0/assets/">
+</ngx-extended-pdf-viewer>
+  <div class="text-end mt-3">
+    <button class="btn btn-success" (click)="onNextClick()">Next</button>
+  </div>
+</div>

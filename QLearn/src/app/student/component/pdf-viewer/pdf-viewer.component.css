@@ -1,0 +1,13 @@
+.module-list .list-group-item.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.pdf-container {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  height: 80vh;
+  overflow-y: auto;
+}

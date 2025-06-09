@@ -1,0 +1,19 @@
+<div class="progress-container mb-3" data-aos="fade-right">
+  <div class="d-flex justify-content-between mb-1">
+    <span class="fw-bold">Progress:</span>
+    <span>{{ statusText }}</span>
+  </div>
+
+  <div class="progress" style="height: 20px;">
+    <div
+      class="progress-bar bg-success"
+      role="progressbar"
+      [style.width.%]="completionPercent"
+      [attr.aria-valuenow]="completionPercent"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    >
+      {{ completionPercent }}%
+    </div>
+  </div>
+</div>
