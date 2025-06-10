@@ -1,0 +1,79 @@
+<app-navbar></app-navbar>
+<div class="container mt-5 pt-5">
+  <h2 class="mb-4 text-primary" data-aos="fade-up">Available Courses</h2>
+
+  <!-- 🔍 Search + Filter Section -->
+  <div class="row g-3 align-items-center mb-4" data-aos="fade-up">
+    <div class="col-md-6">
+      <input
+        class="form-control shadow-sm"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="search()"
+        placeholder="Search by course name or department"
+        aria-label="Search Courses"
+      />
+    </div>
+    <div class="col-md-6">
+      <select
+        class="form-select shadow-sm"
+        [(ngModel)]="selectedDepartment"
+        (change)="search()"
+        aria-label="Select Department"
+      >
+        <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 📚 Course Cards -->
+  <div class="row">
+    <div
+      class="col-md-6 col-lg-4 mb-4"
+      *ngFor="let course of filteredCourses"
+      data-aos="zoom-in"
+    >
+      <div class="card h-100 border-0 shadow-sm p-3 course-card">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title text-primary">{{ course.courseName }}</h5>
+
+          <p><strong>Code:</strong> {{ course.courseCode }}</p>
+          <p><strong>Department:</strong> {{ course.department }}</p>
+          <p><strong>Description:</strong> {{ course.courseDescription }}</p>
+          <p><strong>Seats:</strong> {{ course.numberOfSeats }}</p>
+
+          <p>
+            <strong>Enrollment:</strong>
+            {{ course.enrollPeriod.startDate | date: 'mediumDate' }} -
+            {{ course.enrollPeriod.endDate | date: 'mediumDate' }}
+          </p>
+
+          <p><strong>Modules:</strong> {{ course.modules.length }}</p>
+
+          <div class="mt-auto d-flex justify-content-between">
+            <!-- ✅ Dynamic Enroll/Unenroll Button -->
+            <button
+              class="btn"
+              [ngClass]="isEnrolled(course.courseCode) ? 'btn-danger' : 'btn-success'"
+              (click)="
+                isEnrolled(course.courseCode)
+                  ? confirmUnenroll(course.courseCode)
+                  : confirmEnroll(course.courseCode)
+              "
+            >
+              {{ isEnrolled(course.courseCode) ? 'Unenroll' : 'Enroll' }}
+            </button>
+
+            <!-- 🔗 View Course -->
+            <a
+              [routerLink]="[course.courseCode]"
+              class="btn btn-outline-secondary btn-sm"
+            >
+              View
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

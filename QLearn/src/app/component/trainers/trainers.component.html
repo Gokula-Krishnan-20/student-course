@@ -1,0 +1,85 @@
+<!-- <div class="container-fluid row">
+  <h4 class="text-center p-2">Instructor List</h4>
+  <div class="col-md-4 mb-4" *ngFor="let instructor of instructors" data-aos="fade-up" data-aos-duration="800">
+    <div class="card">
+      <div class="card-body">
+        
+        <h5 class="card-title text-primary mt-3">{{ instructor.name }}</h5>
+        <p class="card-text">
+          <strong>Email:</strong> {{ instructor.email }}<br>
+          <strong>Department:</strong> {{ instructor.department }}<br>
+          <strong>ID:</strong> {{ instructor.instructorId }}<br>
+   
+        </p>
+      </div>
+      <div class="card-footer bg-white border-0">
+        <button (click)="viewProfile(instructor)" class="btn btn-outline-primary btn-sm w-100">View Profile</button>
+      </div>
+    </div>
+  </div>
+</div>
+ -->
+
+<!-- Simple Bootstrap Modal -->
+ <app-nav-admin></app-nav-admin>
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true"  *ngIf="roles !== 'Student'">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      
+      <div class="text-center">
+    
+        <h5 class="mb-2">{{ selectedInstructor?.name }}</h5>
+        <p class="mb-1"><strong>coursesTaken:</strong> {{ selectedInstructor?.coursesTaken }}</p>
+
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4"  *ngIf="roles !== 'Student'">
+  <h4 class="text-center p-2">Instructor List</h4>
+
+  <!-- 🔍 Search Input -->
+  <div class="mb-3">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      class="form-control"
+      placeholder="Search by name, email, or department"
+    />
+  </div>
+
+  <!-- 🧑‍🏫 Card List -->
+  <div class="row">
+    <div
+      class="col-md-4 mb-4"
+      *ngFor="let instructor of filteredInstructors()"
+      data-aos="fade-up"
+      data-aos-duration="800"
+    >
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-primary mt-3">{{ instructor.name }}</h5>
+          <p class="card-text">
+            <strong>Email:</strong> {{ instructor.email }}<br />
+            <strong>Department:</strong> {{ instructor.department }}<br />
+            <strong>ID:</strong> {{ instructor.instructorId }}
+          </p>
+        </div>
+        <div class="card-footer bg-white border-0">
+          <button (click)="viewProfile(instructor)" class="btn btn-outline-primary btn-sm w-100">
+            View Profile
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

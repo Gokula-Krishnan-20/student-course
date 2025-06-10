@@ -1,0 +1,8 @@
+/* Optional custom styling */
+mat-dialog-content {
+  font-size: 16px;
+}
+
+mat-dialog-actions {
+  margin-top: 10px;
+}

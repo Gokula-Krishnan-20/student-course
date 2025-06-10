@@ -1,0 +1,28 @@
+<div class="container mt-4" *ngIf="course" data-aos="fade-up">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary">{{ course.courseName }}</h2>
+    <button class="btn btn-outline-secondary" (click)="goToCoursePage()" data-aos="fade-right">
+      ← Back to Courses
+    </button>
+  </div>
+
+  <p><strong>Course Code:</strong> {{ course.courseCode }}</p>
+  <p><strong>Department:</strong> {{ course.department }}</p>
+
+  <hr />
+  <h4 class="mt-4">Modules</h4>
+  <ul class="list-group mb-4">
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+      *ngFor="let module of course.modules"
+    >
+      {{ module.title }}
+      <span class="badge bg-light text-dark">{{ module.description }}</span>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="!course" class="text-center mt-5">
+  <div class="spinner-border text-primary mb-3"></div>
+  <p>Loading course details...</p>
+</div>

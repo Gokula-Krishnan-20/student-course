@@ -1,0 +1,51 @@
+<!-- MODULES EDIT/VIEW MODE -->
+<div class="content"  *ngIf="roles !== 'Student'">
+  <ng-container *ngIf="data.type === 'modules'">
+  <h2 mat-dialog-title>
+    {{ data.viewOnly ? 'View Modules' : 'Edit Modules' }}
+  </h2>
+
+  <mat-dialog-content>
+    <div *ngIf="modules.length > 0; else noModules">
+      <div *ngFor="let module of modules; let i = index" style="margin-bottom: 20px;">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Module Title</mat-label>
+          <input matInput [(ngModel)]="module.title" [disabled]="data.viewOnly ?? false" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Module Description</mat-label>
+          <textarea
+            matInput
+            rows="3"
+            [(ngModel)]="module.description"
+            [disabled]="data.viewOnly ?? false"
+          ></textarea>
+        </mat-form-field>
+
+        <div *ngIf="!data.viewOnly" style="text-align: right;">
+          <button mat-icon-button color="warn" (click)="removeModule(i)" matTooltip="Remove Module">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+      </div>
+    </div>
+
+    <ng-template #noModules>
+      <p>No modules available.</p>
+    </ng-template>
+
+    <div *ngIf="!data.viewOnly" style="margin-top: 10px;">
+      <button mat-raised-button color="primary" (click)="addModule()">Add Module</button>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" *ngIf="!data.viewOnly">
+    <button mat-button (click)="closeModuleDialog()">Cancel</button>
+    <button mat-button color="primary" (click)="saveModules()">Save</button>
+  </mat-dialog-actions>
+</ng-container>
+
+</div>

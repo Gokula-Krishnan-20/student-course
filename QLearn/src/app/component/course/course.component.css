@@ -1,0 +1,171 @@
+
+.card {
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid #b3e5fc !important;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+ 
+}
+.container-fluid{
+  margin-top: 120px !important;
+}
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+/* Button animation and style */
+.card-footer .btn {
+  transition: all 0.3s ease;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.card-footer .btn:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+
+.container-fluid {
+  margin-top: 120px !important;
+  padding: 0 20px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.equal-width {
+  width: 220px;
+  min-width: 220px;
+}
+
+.filter-field {
+  width: 320px;
+  min-width: 280px;
+}
+
+.mat-form-field {
+  margin-left: 8px;
+}
+
+.full-width-table {
+  width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background: #f1f1f1;
+}
+
+.mat-cell,
+.mat-header-cell {
+  padding: 12px;
+}
+
+.mat-icon-button {
+  transition: transform 0.2s ease;
+}
+
+.mat-icon-button:hover {
+  transform: scale(1.1);
+}
+
+/* Action Icon Colors */
+.icon-view {
+  color: #1e88e5;
+}
+
+.icon-edit {
+  color: #43a047;
+}
+
+.icon-delete {
+  color: #e53935;
+}
+
+.icon-save {
+  color: #2e7d32;
+}
+
+.icon-cancel {
+  color: #757575;
+}
+
+/* Input field improvements */
+input[matInput] {
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+/* Button elevation and animation */
+button[mat-raised-button] {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(30, 136, 229, 0.3);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+button[mat-raised-button]:hover {
+  background-color: #87CEEB;
+  box-shadow: 0 6px 12px rgba(21, 101, 192, 0.5);
+  transform: translateY(-2px);
+}
+
+.snackbar-success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.snackbar-error {
+  background-color: #e53935;
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .toolbar-actions {
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+  .equal-width,
+  .filter-field,
+  button[mat-raised-button] {
+    width: 100%;
+    max-width: 400px;
+  }
+}

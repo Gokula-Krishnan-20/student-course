@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow fixed-top" data-aos="fade-down"  *ngIf="roles !== 'Admin'">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold fs-4" href="#">Q-Learn Student</a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      routerLink="/courses"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Courses</a
+    >
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      routerLink="/mylearning"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >My Learnings</a
+    >
+  </li>
+</ul>
+<!-- 
+      <div class="profile-menu" (click)="toggleDropdown()" (document:click)="closeDropdownOutside($event)">
+  <div class="profile-icon">
+    {{ studentNameFirstLetter }}
+  </div>
+  <ul class="dropdown-menu" [class.show]="dropdownOpen">
+    <li><a class="dropdown-item" routerLink="/student-detail"  
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      Profile
+    </a></li>
+    <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+  </ul>
+</div> -->
+<app-profile></app-profile>
+
+
+
+    </div>
+  </div>
+</nav>
+
