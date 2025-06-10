@@ -56,6 +56,10 @@ const enrollInCourse = async (req, res) => {
       return res.status(400).json({ error: 'Already enrolled in this course' });
     }
 
+    if (student.enrolledCourses.length >= 6) {
+      return res.status(400).json({ error: 'Enrollment limit reached. You can enroll in a maximum of 6 courses.' });
+    }
+
     student.enrolledCourses.push(courseCode);
     course.numberOfSeats -= 1;
 

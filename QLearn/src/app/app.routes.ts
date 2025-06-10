@@ -13,6 +13,7 @@ import { MyLearningComponent } from './component/mylearning/mylearning.component
 import { StudentDetailComponent } from './component/student-detail/student-detail.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
+// import { ModuleDetailComponent } from './component/module-detail/module-detail.component';
 
 export const routes: Routes = [
   { path: 'main-page', component: MainPageComponent },

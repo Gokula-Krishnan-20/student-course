@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Student } from '../model/student.model';
 import { Course } from '../model/course.model';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })
 export class StudentService {
@@ -11,54 +12,67 @@ export class StudentService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Load a student and store in BehaviorSubject
-  loadStudent(studentId: string): void {
+  // 🔹 Decode token and get studentId from sessionStorage
+  private getStudentIdFromToken(): string | null {
+    const token = sessionStorage.getItem('token');
+    if (!token) return null;
+    const decoded: any = jwtDecode(token);
+    return decoded.username || decoded.name || null;
+  }
+
+  // 🔹 Load and cache student data
+  loadStudent(): void {
+    const studentId = this.getStudentIdFromToken();
+    if (!studentId) return;
     this.http.get<Student>(`${this.apiUrl}/${studentId}`)
       .subscribe(student => this.studentSubject.next(student));
   }
 
-  // 🔹 Get student as observable (optional static STU001 fallback)
+  // 🔹 Fetch student (non-cached)
   getStudent(): Observable<Student> {
-    return this.http.get<Student>(`${this.apiUrl}/STU001`);
+    const studentId = this.getStudentIdFromToken();
+    return this.http.get<Student>(`${this.apiUrl}/${studentId}`);
   }
 
-  // 🔹 Get current student snapshot
+  // 🔹 Get BehaviorSubject value
   getStudentValue(): Student | null {
     return this.studentSubject.value;
   }
 
-  // 🔹 Get enrolled courses
-  getEnrolledCourses(studentId: string): Observable<string[]> {
+  // 🔹 Enrolled courses
+  getEnrolledCourses(): Observable<string[]> {
+    const studentId = this.getStudentIdFromToken();
     return this.http.get<string[]>(`${this.apiUrl}/${studentId}/enrolled-courses`);
   }
 
-  // 🔹 Enroll in a course
- enrollCourse(studentId: string, courseCode: string): Observable<any> {
-  return this.http.post(`${this.apiUrl}/${studentId}/enroll/${courseCode}`, {});
-}
+  // 🔹 Enroll in course
+  enrollCourse(courseCode: string): Observable<any> {
+    const studentId = this.getStudentIdFromToken();
+    return this.http.post(`${this.apiUrl}/${studentId}/enroll/${courseCode}`, {});
+  }
 
-
-  // 🔹 Unenroll from a course
-  unenrollCourse(studentId: string, courseCode: string): Observable<any> {
+  // 🔹 Unenroll
+  unenrollCourse(courseCode: string): Observable<any> {
+    const studentId = this.getStudentIdFromToken();
     return this.http.delete(`${this.apiUrl}/${studentId}/unenroll/${courseCode}`);
   }
 
-  // 🔹 Update student details
+  // 🔹 Update details
   updateStudent(student: Student): Observable<Student> {
     return this.http.put<Student>(`${this.apiUrl}/${student.studentId}`, student);
   }
 
-  // 🔹 Reactive student observable
+  // 🔹 Observable stream
   getCurrentStudent(): Observable<Student> {
     return this.studentSubject.asObservable() as Observable<Student>;
   }
 
-  // 🔹 Clear student on logout
+  // 🔹 Logout
   logout(): void {
     this.studentSubject.next(null);
   }
 
-  // 🔹 Update local enrolled courses (for frontend only)
+  // 🔹 Update enrolled courses (frontend only)
   updateStudentEnrolledCourses(updatedCourseIds: string[]): void {
     const student = this.studentSubject.value;
     if (student) {
@@ -66,7 +80,4 @@ export class StudentService {
       this.studentSubject.next(updatedStudent);
     }
   }
-  getStudentIdFromLocalStorage(): string | null {
-  return localStorage.getItem('username');
-}
 }

@@ -14,6 +14,29 @@
     <button class="btn btn-outline-primary mt-3 px-4" routerLink="/courses">Explore Courses</button>
   </div>
 
+  <div *ngIf="enrolledCourses.length > 0" class="row g-3 align-items-center mb-4" data-aos="fade-up">
+    <div class="col-md-6">
+      <input
+        class="form-control shadow-sm"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="search()"
+        placeholder="Search by course name or department"
+        aria-label="Search Courses"
+      />
+    </div>
+    <div class="col-md-6">
+      <select
+        class="form-select shadow-sm"
+        [(ngModel)]="selectedDepartment"
+        (change)="search()"
+        aria-label="Select Department"
+      >
+        <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+      </select>
+    </div>
+  </div>
+
   <!-- Enrolled Courses Cards -->
   <div *ngIf="enrolledCourses.length > 0" class="row">
     <div class="col-md-6 mb-4" *ngFor="let course of enrolledCourses">
@@ -32,8 +55,8 @@
           <p class="text-secondary small">{{ course.courseDescription }}</p>
 
           <div class="mt-auto">
-            <button class="btn btn-outline-primary w-100" (click)="viewModules(course.courseCode)">
-              View Modules
+            <button class="btn btn-outline-primary w-100" (click)="confirmUnenroll(course.courseCode)">
+              Unenroll
             </button>
           </div>
         </div>

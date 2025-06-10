@@ -1,77 +1,31 @@
-  <!-- <div class="row bg-primary align-items-center p-3">
-    <div class="col-md-6">
-      <h2 class="text-white ps-4 m-0">QLearn</h2>
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+  <div class="card shadow-lg p-4 rounded" style="width: 100%; max-width: 400px;">
+    <div class="text-center mb-4">
+      <!-- <img [src]="logo" alt="Logo" class="img-fluid" style="height: 60px;"> -->
+      <h4 class="mt-3">QLearn Login</h4>
     </div>
-    <div class="col-md-6 text-end">
-      <img [src]="logo" alt="Logo" class="logo me-4" height="50">
-    </div>
-  </div> -->
 
-
-<div class="container mt-5">
-    <form class="form p-2" [formGroup]="signUpForm">
-        <h2 class="text-center">Login in</h2>
-        <div class="form-group">
-            <label for="">Name:</label>
-            <input type="text" class="form-control" formControlName="name">
-            <div *ngIf="signUpForm.get('name')?.touched && signUpForm.get('name')?.hasError('required')" class="text-danger">Name is required </div>
-         <div *ngIf="signUpForm.get('name')?.touched && signUpForm.get('name')?.hasError('pattern')" class="text-danger">Name is must be valid format </div>
-       
-        <!-- </div>
-           <div class="form-group">
-            <label for="">Email:</label>
-            <input type="email" class="form-control" formControlName="email">
-                <div *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.hasError('required')" class="text-danger">Email is required </div>
-         <div *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.hasError('pattern')" class="text-danger">Email is must be valid format </div>
-       
-        </div> -->
-           <div class="form-group">
-            <label for="">Password:</label>
-            <input type="password" class="form-control" formControlName="password">
-              <div *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.hasError('required')" class="text-danger">Password is required </div>
-         <div *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.hasError('pattern')" class="text-danger"> Password must be 8+ chars with uppercase, lowercase, number & special character
- </div>
-       
+    <form [formGroup]="signUpForm" (ngSubmit)="submit()">
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" formControlName="username" class="form-control" placeholder="Enter username">
+        <div *ngIf="signUpForm.get('username')?.touched && signUpForm.get('username')?.hasError('required')" class="text-danger small">
+          Username is required
         </div>
-        <!--    <div class="form-group">
-            <label for="">Confirm Password:</label>
-            <input type="password" class="form-control" formControlName="confirmPass">
-             <div *ngIf="signUpForm.get('confirmPass')?.touched && signUpForm.get('confirmPass')?.hasError('required')" class="text-danger">Password is required </div>
-    <div *ngIf="signUpForm.hasError('passwordMismatch') && signUpForm.get('confirmPass')?.touched" class="text-danger">
-    Passwords do not match
-  </div>
-        </div> -->
-  <!-- <div class="form-group">
-  <label for="">Role:</label>
-  <select class="form-select" formControlName="role">
-    <option value="" selected disabled>Select role..</option>
-        <option value="Admin">Admin</option>
-    <option value="Student">Student</option>
-  </select> -->
+      </div>
 
-  <div *ngIf="signUpForm.get('role')?.touched && signUpForm.get('role')?.hasError('required')" class="text-danger">
-    Role is required
-  </div>
-</div> 
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" formControlName="password" class="form-control" placeholder="Enter password">
+        <div *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.hasError('required')" class="text-danger small">
+          Password is required
+        </div>
+      </div>
 
-   <!--   <div *ngIf="show">
-       <div class="form-group" >
-            <label for="">Experience</label>
-            <input type="text" class="form-control" formControlName="skill">
-               <div *ngIf="signUpForm.get('skill')?.touched && signUpForm.get('skill')?.hasError('required')" class="text-danger">ski is required </div>
-         <div *ngIf="signUpForm.get('skill')?.touched && signUpForm.get('skill')?.hasError('pattern')" class="text-danger"> Password must be same with password
-         </div>
-        </div>
-  <div class="form-group">
-            <label for="">Skills</label>
-            <input type="text" class="form-control">
-        </div>
-     </div> -->
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="signUpForm.invalid">Login</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="resetForm()">Reset</button>
+      </div>
     </form>
-    <div class="p-2">
-      <!--   <button class="btn btn-primary" [disabled]="signUpForm.invalid" (click)="submit()">Submit</button> -->
-        <button class="btn btn-danger">Reset</button>
-    </div>
-    <button (click)="submit()" class="btn btn-primary" [disabled]="signUpForm.invalid">Submit</button>
+  </div>
 </div>
-

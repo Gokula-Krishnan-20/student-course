@@ -1,27 +1,32 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
+const express = require('express');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
-const User = require("../model/User");
+const User = require('../model/User');
 
-const SECRET = "jwtSecret123";
+const SECRET_KEY = process.env.JWT_SECRET;
 
-router.post("/login", async (req, res) => {
+// ✅ Login Route
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username, password });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    const user = await User.findOne({ username, password }); // TODO: use bcrypt in production
 
-    const token = jwt.sign(
-      { username: user.username, role: user.role },
-      SECRET,
-      { expiresIn: "2h" }
-    );
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
-    res.json({ token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Login failed" });
+    const payload = {
+      username: user.username,
+      role: user.role
+    };
+
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+
+    res.json({ token, role: user.role });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

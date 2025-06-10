@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { Login } from '../../model/login.model';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginComponent {
     private router: Router
   ) {
     this.signUpForm = this.fb.group({
-      name: ['', [Validators.required]],
+      username: ['', [Validators.required]],
       password: ['', [
         Validators.required
       ]],
@@ -33,28 +34,32 @@ export class LoginComponent {
     });
   }
 
-  submit(): void {
-    if (this.signUpForm.invalid) return;
+  // login.component.ts
+submit(): void {
+  const loginData = {
+    username: this.signUpForm.value.username,
+    password: this.signUpForm.value.password
+  };
+  console.log('Login Data:', loginData);
 
-    const { name, password } = this.signUpForm.value;
-
-    this.authService.login(name, password).subscribe({
-      next: (res) => {
-        const payload = this.authService.storeToken(res.token);
-
-        if (payload.role === 'admin' || payload.role === 'principal') {
-          this.router.navigate(['/principal-dashboard']);
-        } else if (payload.role === 'student') {
-          this.router.navigate(['/courses']);
-        } else {
-          this.error = 'Unknown role';
-        }
-      },
-      error: () => {
-        this.error = 'Invalid credentials';
+  this.authService.login(loginData).subscribe({
+    next: () => {
+      const role = this.authService.getRoleFromToken();
+      if (role === 'student') {
+        this.router.navigate(['/courses']);
+      } else if (role === 'principal') {
+        this.router.navigate(['/principal-dashboard']);
+      } else {
+        this.router.navigate(['/unauthorized']);
       }
-    });
-  }
+    },
+    error: (err) => {
+      console.error(err);
+      this.error = 'Invalid login credentials';
+    }
+  });
+}
+
 
   resetForm(): void {
     this.signUpForm.reset();

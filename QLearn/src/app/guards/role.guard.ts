@@ -1,27 +1,19 @@
+// role.guard.ts
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot
-} from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RoleGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const expectedRole = route.data['role']; // 'student' or 'principal'
-    const actualRole = localStorage.getItem('role'); // fetched from login token
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    const expectedRole = route.data['role'];
+    const actualRole = this.auth.getRoleFromToken();
 
-    if (expectedRole === actualRole) {
-      return true;
-    }
+    if (actualRole === expectedRole) return true;
 
-    // Not authorized → redirect to landing
-    this.router.navigate(['/main-page']);
+    this.router.navigate(['/unauthorized']);
     return false;
   }
 }

@@ -34,10 +34,11 @@
   </table>
 
   <div class="text-end" *ngIf="isEditing">
-    <button class="btn btn-success" (click)="saveChanges()">Save</button>
+    <button class="btn btn-success" [disabled]="!hasChanges()" (click)="saveChanges()">Save</button>
   </div>
 </div>
 
+<!-- Loading State -->
 <div *ngIf="!student" class="text-center mt-5">
   <div class="spinner-border text-primary" role="status"></div>
   <p class="mt-2">Loading student details...</p>

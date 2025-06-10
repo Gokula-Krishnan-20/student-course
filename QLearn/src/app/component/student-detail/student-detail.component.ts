@@ -19,16 +19,12 @@ export class StudentDetailComponent implements OnInit {
   constructor(private studentService: StudentService) {}
 
   ngOnInit(): void {
-    const studentId = this.studentService.getStudentIdFromLocalStorage();
+    this.studentService.loadStudent();
 
-    if (!studentId) {
-      console.error('No student ID found in localStorage');
-      return;
-    }
-
-    this.studentService.loadStudent(studentId);
-    this.studentService.getStudent().subscribe({
-      next: (data) => this.student = data,
+    this.studentService.getCurrentStudent().subscribe({
+      next: (data) => {
+        this.student = data;
+      },
       error: (err) => console.error('Error fetching student:', err)
     });
   }
@@ -41,18 +37,25 @@ export class StudentDetailComponent implements OnInit {
         ...this.student,
         studentId: this.student.studentId,
         email: this.student.email,
-        enrolledCourses: this.student.enrolledCourses
+        enrolledCourses: [...this.student.enrolledCourses]
       };
     }
     this.isEditing = !this.isEditing;
   }
 
+  hasChanges(): boolean {
+    if (!this.student || !this.editableStudent) return false;
+    return this.student.name !== this.editableStudent.name ||
+           this.student.department !== this.editableStudent.department;
+  }
+
   saveChanges(): void {
-    if (!this.editableStudent) return;
+    if (!this.editableStudent || !this.hasChanges()) return;
 
     this.studentService.updateStudent(this.editableStudent).subscribe({
       next: (updated) => {
         this.student = updated;
+        this.studentService.loadStudent(); // Refresh state
         this.editableStudent = null;
         this.isEditing = false;
       },
