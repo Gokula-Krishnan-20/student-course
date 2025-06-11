@@ -1,9 +1,13 @@
+<!-- 📌 Navbar -->
 <app-navbar></app-navbar>
+
+<!-- 📦 Main Container -->
 <div class="container mt-5 pt-5">
   <h2 class="mb-4 text-primary" data-aos="fade-up">Available Courses</h2>
 
   <!-- 🔍 Search + Filter Section -->
   <div class="row g-3 align-items-center mb-4" data-aos="fade-up">
+    <!-- Search Input -->
     <div class="col-md-6">
       <input
         class="form-control shadow-sm"
@@ -14,6 +18,8 @@
         aria-label="Search Courses"
       />
     </div>
+
+    <!-- Department Filter Dropdown -->
     <div class="col-md-6">
       <select
         class="form-select shadow-sm"
@@ -28,7 +34,7 @@
     </div>
   </div>
 
-  <!-- 📚 Course Cards -->
+  <!-- 🎓 Course Cards -->
   <div class="row">
     <div
       class="col-md-6 col-lg-4 mb-4"
@@ -39,19 +45,19 @@
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-primary">{{ course.courseName }}</h5>
 
+          <!-- 📋 Course Info -->
           <p><strong>Code:</strong> {{ course.courseCode }}</p>
           <p><strong>Department:</strong> {{ course.department }}</p>
           <p><strong>Description:</strong> {{ course.courseDescription }}</p>
           <p><strong>Seats:</strong> {{ course.numberOfSeats }}</p>
-
           <p>
             <strong>Enrollment:</strong>
             {{ course.enrollPeriod.startDate | date: 'mediumDate' }} -
             {{ course.enrollPeriod.endDate | date: 'mediumDate' }}
           </p>
-
           <p><strong>Modules:</strong> {{ course.modules.length }}</p>
 
+          <!-- 🧭 Actions -->
           <div class="mt-auto d-flex justify-content-between">
             <button
               class="btn"
@@ -67,6 +73,7 @@
               {{ isEnrolled(course.courseCode) ? 'Unenroll' : 'Enroll' }}
             </button>
 
+            <!-- 🔗 View Course Detail -->
             <a
               [routerLink]="[course.courseCode]"
               class="btn btn-outline-secondary btn-sm"

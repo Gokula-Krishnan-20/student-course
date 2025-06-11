@@ -15,6 +15,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrls: ['./courses.component.css'],
 })
 export class CoursesComponent implements OnInit {
+  // 📦 Data
   courses: Course[] = [];
   filteredCourses: Course[] = [];
   searchTerm: string = '';
@@ -35,8 +36,10 @@ export class CoursesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Load current student data
     this.studentService.loadStudent();
 
+    // Fetch enrolled courses
     this.studentService.getCurrentStudent().subscribe({
       next: (student) => {
         this.enrolledCourseCodes = student?.enrolledCourses || [];
@@ -46,30 +49,37 @@ export class CoursesComponent implements OnInit {
       },
     });
 
+    // Load initial courses
     this.loadMoreCourses();
   }
 
+  // 🔍 Triggered on search/filter change
   search(): void {
     this.applyFilters();
   }
 
+  // 🧠 Apply department and search filters
   applyFilters(): void {
     const search = this.searchTerm.toLowerCase();
     this.filteredCourses = this.courses.filter((course) => {
       const matchesSearch =
         course.courseName.toLowerCase().includes(search) ||
         course.department.toLowerCase().includes(search);
+
       const matchesDepartment =
         this.selectedDepartment === 'All' ||
         course.department === this.selectedDepartment;
+
       return matchesSearch && matchesDepartment;
     });
   }
 
+  // ✅ Check if student is enrolled in a course
   isEnrolled(courseCode: string): boolean {
     return this.enrolledCourseCodes.includes(courseCode);
   }
 
+  // ➕ Confirm and enroll in a course
   confirmEnroll(courseCode: string): void {
     if (this.isEnrolled(courseCode)) return;
 
@@ -98,6 +108,8 @@ export class CoursesComponent implements OnInit {
         console.error('Enrollment failed:', err);
         const backendMessage =
           err?.error?.error || 'Something went wrong during enrollment.';
+
+        // Handle known backend responses
         let message = '⚠️ Enrollment failed.';
         switch (backendMessage) {
           case 'Enrollment limit reached. You can enroll in a maximum of 6 courses.':
@@ -118,11 +130,13 @@ export class CoursesComponent implements OnInit {
           default:
             message = `⚠️ ${backendMessage}`;
         }
+
         alert(message);
       },
     });
   }
 
+  // ➖ Confirm and unenroll from a course
   confirmUnenroll(courseCode: string): void {
     const confirmed = window.confirm(
       'Are you sure you want to unenroll from this course?'
@@ -147,6 +161,7 @@ export class CoursesComponent implements OnInit {
     });
   }
 
+  // 🔄 Refresh courses and reset pagination
   refreshCourses(): void {
     this.page = 1;
     this.courses = [];
@@ -154,34 +169,37 @@ export class CoursesComponent implements OnInit {
     this.loadMoreCourses();
   }
 
+  // 📥 Load paginated course data
   loadMoreCourses(): void {
     if (this.loadingMore || this.allLoaded) return;
 
     this.loadingMore = true;
-    this.courseService
-      .getPaginatedCourses(this.page, this.limit)
-      .subscribe({
-        next: (newCourses) => {
-          if (newCourses.length === 0) {
-            this.allLoaded = true;
-          } else {
-            this.courses = [...this.courses, ...newCourses];
-            const deptSet = new Set(
-              this.courses.map((c) => c.department)
-            );
-            this.departments = ['All', ...Array.from(deptSet).sort()];
-            this.applyFilters();
-            this.page++;
-          }
-          this.loadingMore = false;
-        },
-        error: (err) => {
-          console.error('Error loading courses:', err);
-          this.loadingMore = false;
-        },
-      });
+
+    this.courseService.getPaginatedCourses(this.page, this.limit).subscribe({
+      next: (newCourses) => {
+        if (newCourses.length === 0) {
+          this.allLoaded = true;
+        } else {
+          this.courses = [...this.courses, ...newCourses];
+
+          // Dynamically extract department list
+          const deptSet = new Set(this.courses.map((c) => c.department));
+          this.departments = ['All', ...Array.from(deptSet).sort()];
+
+          this.applyFilters();
+          this.page++;
+        }
+
+        this.loadingMore = false;
+      },
+      error: (err) => {
+        console.error('Error loading courses:', err);
+        this.loadingMore = false;
+      },
+    });
   }
 
+  // 🧭 Infinite scroll trigger
   @HostListener('window:scroll', [])
   onScroll(): void {
     const scrollTop =
@@ -189,6 +207,7 @@ export class CoursesComponent implements OnInit {
       document.documentElement.scrollTop ||
       document.body.scrollTop ||
       0;
+
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = document.documentElement.clientHeight;
 
@@ -197,6 +216,7 @@ export class CoursesComponent implements OnInit {
     }
   }
 
+  // 🔍 Navigate to course detail page
   viewCourse(courseCode: string): void {
     this.router.navigate(['/courses', courseCode]);
   }

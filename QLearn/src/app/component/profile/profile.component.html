@@ -1,14 +1,15 @@
-<div class="profile-menu" (click)="toggleDropdown()"  *ngIf="roles !== 'Admin'">
+<!-- 👤 Profile Dropdown Menu -->
+<div class="profile-menu ms-auto me-3" (click)="toggleDropdown()" *ngIf="roles !== 'Admin'">
+  <!-- 🟦 Circle Icon with First Letter -->
   <div class="profile-icon">
     {{ studentNameFirstLetter }}
   </div>
 
-  <ul class="dropdown-menu" [class.show]="isDropdownOpen">
+  <!-- 🔽 Dropdown Items -->
+  <ul class="dropdown-menu dropdown-menu-end mt-2" [class.show]="isDropdownOpen">
     <li>
-  <a class="dropdown-item" (click)="goToProfile()">
-    Profile
-  </a>
-</li>
+      <a class="dropdown-item" (click)="goToProfile()">Profile</a>
+    </li>
     <li>
       <a class="dropdown-item" (click)="logout()">Logout</a>
     </li>
