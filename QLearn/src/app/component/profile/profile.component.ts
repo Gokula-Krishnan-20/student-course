@@ -34,7 +34,7 @@ roles:any;
 
   goToProfile() {
     this.closeDropdown();
-    this.router.navigate(['/student-detail']);
+    this.router.navigate(['student/student-detail']);
   }
 }
 

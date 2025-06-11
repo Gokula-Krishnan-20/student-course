@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ProfileComponent } from '../profile-admin/profile.component';
 import {MatDialog} from '@angular/material/dialog';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-nav-admin',
   imports: [RouterLink, RouterModule],
@@ -10,13 +10,11 @@ import { RouterLink, RouterModule } from '@angular/router';
 })
 export class NavAdminComponent {
 url: any;
-  constructor(private dialog: MatDialog){
+  constructor(private dialog: MatDialog, private router: Router){
 
   }
-  profile(){
-      this.dialog.open(ProfileComponent,{
-      height: '400px',
-      width: '400px',
-      })
-    }
+   logout() {
+    sessionStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
 }

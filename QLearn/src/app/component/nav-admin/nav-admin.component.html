@@ -7,7 +7,7 @@
           <li class="nav-item"><a routerLink="/principal-dashboard" class="nav-link text-dark fw-bold text-white">Dashboard</a></li>
           <li class="nav-item"><a routerLink="/trainers" class="nav-link text-dark fw-bold text-white">Trainers</a></li>
           <li class="nav-item"><a routerLink="/course" class="nav-link text-dark fw-bold text-white">All Courses</a></li>
-           <li class="nav-item"><a routerLink="/course" class="nav-link text-dark fw-bold text-white">Students</a></li>
+           <li class="nav-item"><a routerLink="/student-data" class="nav-link text-dark fw-bold text-white">Students</a></li>
        <!--    <li class="nav-item"><a routerLink="/approval-list" class="nav-link text-dark fw-bold text-white">Requested Courses</a></li>
        -->  </ul>
       </nav>
@@ -16,7 +16,11 @@
     <div class="col-md-3"></div>
     
     <div class="col-md-1 text-end text-center mt-2">
-      <img [src]="url" height="50px" width="60px" class="rounded-circle shadow-sm border" (click)="profile()">
+          <div class="col-md-1 text-end text-center mt-2">
+ 
+       <button class="btn btn-primary btn-sm rounded-pill  mt-2" (click)="logout()">
+        Login
+        </button>
     </div>
   </div>
 </div>

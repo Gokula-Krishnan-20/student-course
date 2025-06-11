@@ -197,3 +197,14 @@ button[mat-raised-button]:hover {
   background-color: #0d6efd;
   color: #fff;
 }
+
+.toolbar-title {
+  flex: 1;
+}
+ 
+.course-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #1976d2; /* Material Blue 700 */
+}
