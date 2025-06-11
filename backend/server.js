@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const app = express();
-
+const studentRoutes = require('./routes/studentRoutes');
 mongoose.connect(
  'mongodb+srv://harivarshinisr:W0LGfYTndADWxi8g@cluster0.vzc65q1.mongodb.net/student-course?retryWrites=true&w=majority')
 .then(() => console.log(' MongoDB Atlas connected'))
@@ -35,9 +35,8 @@ const courseRoutes = require('./routes/courseRoutes');
 app.use('/api/courses', courseRoutes);
 
 /* student */
-const studentRoutes = require('./routes/studentRoutes');
-app.use('/api', studentRoutes);
 
+app.use('/api', studentRoutes);
 
 const userRoutes = require('./routes/dashboard');
 app.use('/api', userRoutes);

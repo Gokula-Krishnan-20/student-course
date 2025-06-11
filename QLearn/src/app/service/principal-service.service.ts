@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Student } from '../component/admin-model/student';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +21,14 @@ loginGetUrl = 'http://localhost:3700/api/users';   /* http://localhost:3700/api/
 insUrl = 'http://localhost:3700/api/instructors';
  private baseUrl = 'http://localhost:3700/api/courses';
   private studentUrl = 'http://localhost:3700/api/students'
-
+ private StuAddUrl = 'http://localhost:3700/api/students';
   getAll(){
     return this.http.get(this.ApiUrl);
   }
-   
+   /* Student add */
+ addStudent(studentData: Student): Observable<any> {
+  return this.http.post(this.StuAddUrl, studentData);
+}
   login(data:any){
     return this.http.post(this.loginUrl, data);
   }

@@ -227,50 +227,85 @@ export class CourseComponent implements OnInit {
     }
   }
  
-  // 🔹 Open dialog to add modules for a course before saving
-  addNewRow(row: Course) {
-    if (!this.validateEnrollmentDates(row.enrollStart ?? null, row.enrollEnd ?? null)) return;
  
-    const dialogRef = this.dialog.open(DialogComponent, {
-      data: { type: 'modules', modules: [], viewOnly: false },
-      width: '600px'
-    });
  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const payload = {
-          ...row,
-          modules: result,
-          enrollPeriod: {
-            startDate: row.enrollStart,
-            endDate: row.enrollEnd
-          }
-        };
-        this.svc.addCourse(payload).subscribe({
-          next: () => {
-            this.loadCourses();
-            this.snackBar.open('Course added successfully!', 'Close', {
-              duration: 3000,
-              panelClass: ['snackbar-success']
-            });
-          },
-          error: () => {
-            this.snackBar.open('Failed to add course.', 'Close', {
-              duration: 3000,
-              panelClass: ['snackbar-error']
-            });
-          }
-        });
-      }
-    });
+ 
+validateCourseDetails(course: Course): boolean {
+  if (!course.courseName.trim()) {
+    this.snackBar.open('Course Name is required.', 'Close', { duration: 3000 });
+    return false;
   }
  
-  // 🔹 Confirm and delete a course after user confirmation
+  if (!course.courseCode.trim()) {
+    this.snackBar.open('Course Code is required.', 'Close', { duration: 3000 });
+    return false;
+  }
+ 
+  if (!course.department.trim()) {
+    this.snackBar.open('Department is required.', 'Close', { duration: 3000 });
+    return false;
+  }
+ 
+  if (!course.instructorId.trim()) {
+    this.snackBar.open('Instructor is required.', 'Close', { duration: 3000 });
+    return false;
+  }
+ 
+  return true;
+}
+ 
+ 
+ 
+ 
+ 
+ 
+  // 🔹 Open dialog to add modules for a course before saving
+ addNewRow(row: Course) {
+  if (!this.validateCourseDetails(row)) return;
+  if (!this.validateEnrollmentDates(row.enrollStart ?? null, row.enrollEnd ?? null)) return;
+ 
+  const dialogRef = this.dialog.open(DialogComponent, {
+    data: { type: 'modules', modules: [], viewOnly: false },
+    width: '600px'
+  });
+ 
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      const payload = {
+        ...row,
+        modules: result,
+        enrollPeriod: {
+          startDate: row.enrollStart,
+          endDate: row.enrollEnd
+        }
+      };
+      this.svc.addCourse(payload).subscribe({
+        next: () => {
+          this.loadCourses();
+          this.snackBar.open('Course added successfully!', 'Close', {
+            duration: 3000,
+            panelClass: ['snackbar-success']
+          });
+        },
+        error: () => {
+          this.snackBar.open('Failed to add course.', 'Close', {
+            duration: 3000,
+            panelClass: ['snackbar-error']
+          });
+        }
+      });
+    }
+  });
+}
+ 
+    // 🔹 Confirm and delete a course after user confirmation
   confirmDelete(row: Course) {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { type: 'delete', course: row },
       width: '300px'
     });
+ 
+
  
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {

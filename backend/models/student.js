@@ -6,6 +6,7 @@ const studentSchema = new mongoose.Schema({
   department: String,
   email: String,
   enrolledCourses: [String], // assuming it's an array of course IDs or names
+  
 }, { timestamps: true });
 
 module.exports = mongoose.model('Student', studentSchema);
