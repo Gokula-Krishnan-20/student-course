@@ -27,6 +27,7 @@ roles:any;
   }
 
   logout() {
+    sessionStorage.removeItem('token');
     this.closeDropdown();
     this.router.navigate(['/login']);
   }

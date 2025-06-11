@@ -51,20 +51,11 @@ ngOnInit(){
 
   logout() {
   // Clear all relevant localStorage data
-  localStorage.removeItem('name');
-  localStorage.removeItem('email');
-  localStorage.removeItem('role');
-  localStorage.removeItem('token'); // if you're storing the JWT
-  localStorage.clear(); // optional: clears everything
-
+  sessionStorage.removeItem('token');
   // Optionally reset component variables
-  this.name = '';
-  this.email = '';
-  this.role = '';
-  this.roles = '';
 
   // Close any open dialogs and navigate to login
-  this.dialog.closeAll();
+ this.dialog.closeAll();
   this.router.navigate(['/login']);
 }
 

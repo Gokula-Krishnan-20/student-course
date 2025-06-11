@@ -1,24 +1,21 @@
 <div class="container-fluid p-0">
 
-  <div class="row bg-primary align-items-center p-2">
-    <div class="col-md-6">
-      <h2 class="text-white ps-4 m-0">Q_Learn</h2>
+  <!-- 🔵 Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold ps-3" href="#">QLearn</a>
     </div>
-    <div class="col-md-6 text-end pe-4">
-      <img [src]="logo" alt="Logo" class="logo img-fluid" style="max-height: 50px;">
-    </div>
-  </div>
+  </nav>
 
+  <!-- 🖼️ Hero Section with Background -->
   <div class="position-relative">
-    <img [src]="background" alt="Background" class="w-100 background-image img-fluid">
-    
-    <div class="overlay-text text-white text-center position-absolute top-50 start-50">
-      <h1>Welcome to QLearn</h1>
-      <p>Your journey to knowledge starts here</p>
+    <img [src]="background" alt="Background" class="w-100 background-image img-fluid" style="max-height: 100vh; object-fit: cover;">
+
+    <div class="overlay-text text-white text-center position-absolute top-50 start-50 translate-middle">
+      <h1 class="display-4 fw-bold">Welcome to QLearn</h1>
+      <p class="fs-5">Your journey to knowledge starts here</p>
       <button class="btn btn-light btn-lg mt-3" (click)="log()">Explore Courses</button>
     </div>
   </div>
 
 </div>
-
-<router-outlet></router-outlet>

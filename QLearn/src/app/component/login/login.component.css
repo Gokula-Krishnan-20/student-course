@@ -14,3 +14,9 @@ form .form-control {
 .btn {
   border-radius: 0.5rem;
 }
+
+.qlearn-brand {
+  font-size: 1.5rem; /* Increase font size */
+  font-weight: 500; /* Medium bold */
+  letter-spacing: 1px; /* Optional: slight spacing for emphasis */
+}

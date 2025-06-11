@@ -15,13 +15,16 @@ import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { EditInstructorComponent } from './component/edit-instructor/edit-instructor.component';
 import { StudentDataComponent } from './component/student-data/student-data.component';
+import { LoginGuard } from './guards/login.guard';
 // import { ModuleDetailComponent } from './component/module-detail/module-detail.component';
 
 export const routes: Routes = [
   { path: 'main-page', component: MainPageComponent },
   { path: '', redirectTo: 'main-page', pathMatch: 'full' },
 
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent,
+    canActivate: [LoginGuard]
+   },
 
   {
     path: 'principal-dashboard',
