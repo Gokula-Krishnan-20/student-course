@@ -1,0 +1,33 @@
+<app-nav-admin></app-nav-admin>
+<div class="container" *ngIf="roles !== 'Student'">
+  <h4 class="text-center p-2">Students List</h4>
+  <!-- Dropdown Filter -->
+  <div class="mb-3 search">
+    <select class="form-select" [(ngModel)]="filterOption">
+      <option value="all">All Students</option>
+      <option value="enrolled">Enrolled Only</option>
+    </select>
+  </div>
+
+  <!-- Cards -->
+  <div class="row">
+    <div
+      class="col-md-4 mb-4"
+      *ngFor="let student of filteredStudents()"
+    >
+      <div class="card h-100 shadow-sm"    data-aos="fade-up"
+      data-aos-duration="800">
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ student.name }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ student.studentId }}</h6>
+          <p class="card-text">
+            <strong>Department:</strong> {{ student.department }}<br />
+            <strong>Email:</strong> {{ student.email }}<br />
+            <strong>Courses:</strong>
+            {{ student.enrolledCourses.join(', ') }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

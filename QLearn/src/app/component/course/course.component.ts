@@ -1,139 +1,7 @@
-/* import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
-import { PrincipalServiceService } from '../../service/principal-service.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ApprovalListComponent } from '../approval-list/approval-list.component';
-import { NgxPaginationModule } from 'ngx-pagination';
 
-
-@Component({
-  selector: 'app-course',
-  standalone: true,
-  imports: [CommonModule, RouterLink, RouterModule, RouterOutlet, FormsModule, ReactiveFormsModule, NgxPaginationModule],
-  templateUrl: './course.component.html',
-  styleUrls: ['./course.component.css']
-})
-export class CourseComponent {
-  courseForm!: FormGroup;
-  isEditMode = false;
-  courseId: string | null = null;
-  courses: any;
-
-  constructor(
-    private dialog: MatDialog,
-    private fb: FormBuilder,
-    private service: PrincipalServiceService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
-roles:any
-  ngOnInit(): void {
-
-     this.roles = localStorage.getItem('role');
-  console.log('User Role:', this.roles);
-  
-    this.courseForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      department: ['', Validators.required],
-      instructor: ['', Validators.required],
-      modules: this.fb.array([]),  // Replace material with modules
-      category: [''],
-      duration: [''],
-      rating: ['']
-    });
-
-    this.loadCourses();
-
-    this.courseId = this.route.snapshot.paramMap.get('id');
-    if (this.courseId) {
-      this.isEditMode = true;
-      this.service.getCourse(this.courseId).subscribe(data => {
-        this.courseForm.patchValue(data);
-        if (data.modules && Array.isArray(data.modules)) {
-          this.setModules(data.modules);
-        }
-      }, err => {
-        console.error('Error loading course:', err);
-      });
-    }
-  }
-
-  get modules(): FormArray {
-    return this.courseForm.get('modules') as FormArray;
-  }
-
-  setModules(modules: any[]) {
-    const moduleFGs = modules.map(module => this.fb.group({
-      title: [module.title, Validators.required],
-      description: [module.description, Validators.required]
-    }));
-    const moduleFormArray = this.fb.array(moduleFGs);
-    this.courseForm.setControl('modules', moduleFormArray);
-  }
-
-  addModule() {
-    this.modules.push(this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required]
-    }));
-  }
-
-  removeModule(index: number) {
-    this.modules.removeAt(index);
-  }
-
-  loadCourses(): void {
-    this.service.getCourses().subscribe(data => {
-      this.courses = data;
-    }, err => {
-      console.error('Error fetching courses:', err);
-    });
-  }
-
-  onSubmit(): void {
-    if (this.isEditMode && this.courseId) {
-      this.service.updateCourse(this.courseId, this.courseForm.value).subscribe(() => {
-        alert('Course updated successfully');
-        this.loadCourses();
-      }, err => {
-        console.error('Error updating course:', err);
-      });
-    } else {
-      this.service.addCourse(this.courseForm.value).subscribe(() => {
-        alert('Course added successfully');
-        this.loadCourses();
-        this.courseForm.reset();
-        this.modules.clear();  // reset modules as well
-      }, err => {
-        console.error('Error adding course:', err);
-      });
-    }
-  }
-
-  deleteCourse(id: string): void {
-    if (confirm('Are you sure you want to delete this course?')) {
-      this.service.deleteCourse(id).subscribe(() => {
-        alert('Course deleted successfully');
-        this.loadCourses();
-      }, err => {
-        console.error('Error deleting course:', err);
-      });
-    }
-  }
-
-  openDialog() {
-    this.dialog.open(ApprovalListComponent, {
-      width: '570px',
-      height: '630px',
-         position: { top: '100px' },
-    });
-  }
-  
-}
- */import { Component, OnInit, ViewChild } from '@angular/core';
+ 
+// Angular and Material imports
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -141,13 +9,19 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { PrincipalServiceService } from '../../service/principal-service.service';
 import { DialogComponent } from '../dialog/dialog.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+ 
+import { FormsModule } from '@angular/forms';
 import { NavAdminComponent } from "../nav-admin/nav-admin.component";
-
+ 
+ 
+// Interface for a Course object
 interface Course {
   _id?: string;
   courseName: string;
@@ -162,7 +36,8 @@ interface Course {
   _new?: boolean;
   _editing?: boolean;
 }
-
+ 
+// Component Declaration
 @Component({
   selector: 'app-course',
   standalone: true,
@@ -170,17 +45,21 @@ interface Course {
     MatPaginatorModule,
     MatIconModule,
     MatTableModule,
-    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
     CommonModule,
+    MatSelectModule,
+    FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     NavAdminComponent
 ],
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.css']
 })
 export class CourseComponent implements OnInit {
+  // Columns displayed in the course table
   displayedColumns: string[] = [
     'courseName',
     'courseCode',
@@ -190,26 +69,40 @@ export class CourseComponent implements OnInit {
     'enrollEnd',
     'actions'
   ];
-
+ 
+  // Data source for the Material table
   dataSource = new MatTableDataSource<Course>([]);
+ 
+  // Value used for filtering the course list
   filterValue = '';
+ 
+  // Minimum selectable date (used to restrict past dates in datepicker)
   minDate: string = new Date().toISOString().split('T')[0];
-
+ 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+ 
   constructor(
     private svc: PrincipalServiceService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
-roles:any;
+  ) { }
+ 
+  roles: any;
+  instructors: any[] = [];
+ 
+  // 🔹 Called when component initializes — loads user role, instructors, and course data
   ngOnInit() {
-      this.roles = localStorage.getItem('role');
-  console.log('User Role:', this.roles);
+    this.roles = localStorage.getItem('role');
+    console.log('User Role:', this.roles);
     this.loadCourses();
+    this.svc.getInstructor().subscribe((data: any) => {
+      this.instructors = data;
+      console.log(this.instructors);
+    });
   }
-
+ 
+  // 🔹 Fetch all courses from the server and initialize the table data
   loadCourses() {
     this.svc.getCourses().subscribe(data => {
       this.dataSource.data = data.map(c => ({
@@ -221,18 +114,20 @@ roles:any;
       this.dataSource.sort = this.sort;
     });
   }
-
+ 
+  // 🔹 Apply text filter to the course list based on name, department, or instructor
   applyFilter() {
     const filter = this.filterValue.trim().toLowerCase();
     this.dataSource.filterPredicate = (d, f) =>
       d.courseName.toLowerCase().includes(f) ||
       d.department.toLowerCase().includes(f) ||
       d.instructorId.toLowerCase().includes(f);
-
+ 
     this.dataSource.filter = filter;
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
-
+ 
+  // 🔹 Create a new blank course row for user to fill in
   createNew() {
     const empty: Course = {
       courseName: '',
@@ -249,11 +144,13 @@ roles:any;
     };
     this.dataSource.data = [empty, ...this.dataSource.data];
   }
-
+ 
+  // 🔹 Enable edit mode for a specific course row
   startEdit(row: Course) {
     row._editing = true;
   }
-
+ 
+  // 🔹 Cancel the edit operation — either remove or reload data
   cancelEdit(row: Course) {
     if (row._new) {
       this.dataSource.data = this.dataSource.data.filter(r => r !== row);
@@ -261,46 +158,48 @@ roles:any;
       this.loadCourses();
     }
   }
-
+ 
+  // 🔹 Validate that the enrollment dates are logical and follow required rules
   validateEnrollmentDates(start: Date | null, end: Date | null): boolean {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
+ 
     if (!start || !end) {
       this.snackBar.open('Both start and end dates are required.', 'Close', { duration: 3000 });
       return false;
     }
-
+ 
     const startDate = new Date(start);
     const endDate = new Date(end);
-
+ 
     if (startDate < today) {
       this.snackBar.open('Start date cannot be in the past.', 'Close', { duration: 3000 });
       return false;
     }
-
+ 
     if (endDate <= startDate) {
       this.snackBar.open('End date must be after the start date.', 'Close', { duration: 3000 });
       return false;
     }
-
+ 
     const diffInDays = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
     if (diffInDays < 4) {
       this.snackBar.open('Gap between start and end must be at least 4 days.', 'Close', { duration: 3000 });
       return false;
     }
-
+ 
     return true;
   }
-
+ 
+  // 🔹 Save changes to a course (new or edited)
   saveEdit(row: Course) {
     if (!this.validateEnrollmentDates(row.enrollStart ?? null, row.enrollEnd ?? null)) return;
-
+ 
     const payload = {
       ...row,
       enrollPeriod: { startDate: row.enrollStart, endDate: row.enrollEnd }
     };
-
+ 
     if (row._new) {
       this.svc.addCourse(payload).subscribe({
         next: () => {
@@ -327,15 +226,16 @@ roles:any;
       });
     }
   }
-
+ 
+  // 🔹 Open dialog to add modules for a course before saving
   addNewRow(row: Course) {
     if (!this.validateEnrollmentDates(row.enrollStart ?? null, row.enrollEnd ?? null)) return;
-
+ 
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { type: 'modules', modules: [], viewOnly: false },
       width: '600px'
     });
-
+ 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         const payload = {
@@ -364,13 +264,14 @@ roles:any;
       }
     });
   }
-
+ 
+  // 🔹 Confirm and delete a course after user confirmation
   confirmDelete(row: Course) {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { type: 'delete', course: row },
       width: '300px'
     });
-
+ 
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
         this.svc.deleteCourse(row._id!).subscribe(() => {
@@ -383,7 +284,8 @@ roles:any;
       }
     });
   }
-
+ 
+  // 🔹 View the list of modules associated with a course (read-only)
   viewModules(row: Course) {
     this.dialog.open(DialogComponent, {
       data: {
@@ -393,5 +295,16 @@ roles:any;
       },
       width: '600px'
     });
+  }
+ 
+  // 🔹 Display instructor name alongside instructor ID in the UI
+  getInstructorName(course: Course): string {
+    const instructor = this.instructors.find(i => i.instructorId === course.instructorId);
+    return instructor ? `${instructor.instructorId} - ${instructor.name}` : '';
+  }
+ 
+  // 🔹 Utility to check if a field has only symbols or numbers (used for validation)
+  hasOnlySymbolsOrNumbers(value: string): boolean {
+    return !/[a-zA-Z]/.test(value);
   }
 }

@@ -13,6 +13,8 @@ import { MyLearningComponent } from './component/mylearning/mylearning.component
 import { StudentDetailComponent } from './component/student-detail/student-detail.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
+import { EditInstructorComponent } from './component/edit-instructor/edit-instructor.component';
+import { StudentDataComponent } from './component/student-data/student-data.component';
 // import { ModuleDetailComponent } from './component/module-detail/module-detail.component';
 
 export const routes: Routes = [
@@ -27,6 +29,14 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
   data: { role: 'principal' }
   },
+   { path: 'edit-instructor/:id', component:EditInstructorComponent,
+    canActivate: [AuthGuard, RoleGuard],
+  data: { role: 'principal' }
+     },
+      {path:'student-data', component:StudentDataComponent,
+        canActivate: [AuthGuard, RoleGuard],
+  data: { role: 'principal' }
+      },
   {
     path: 'profile',
     component: ProfileComponent,

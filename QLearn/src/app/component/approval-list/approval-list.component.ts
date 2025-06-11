@@ -4,11 +4,12 @@ import { PrincipalServiceService } from '../../service/principal-service.service
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
+import { NavAdminComponent } from "../nav-admin/nav-admin.component";
 
 @Component({
   selector: 'app-approval-list',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NavAdminComponent],
   templateUrl: './approval-list.component.html',
   styleUrls: ['./approval-list.component.css']
 })

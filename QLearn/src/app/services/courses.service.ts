@@ -17,7 +17,10 @@ export class CourseService {
   getCourseByCode(code: string): Observable<Course> {
     return this.http.get<Course>(`${this.apiUrl}/code/${code}`);
   }
-
+  
+  getPaginatedCourses(page: number, limit: number = 10): Observable<Course[]> {
+  return this.http.get<Course[]>(`${this.apiUrl}/paginated?page=${page}&limit=${limit}`);
+  }
 
   // ✅ Get modules by course code
   getCourseModules(code: string): Observable<any[]> {

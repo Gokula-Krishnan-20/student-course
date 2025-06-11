@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,9 @@ ApiUrl = 'https://backend-0x10.onrender.com/api/dashboard/metrics';
 loginUrl = 'http://localhost:3700/api/login';  /* https://backend-0x10.onrender.com/ */
 
 loginGetUrl = 'http://localhost:3700/api/users';   /* http://localhost:3700/api/users */
-insUrl = 'http://localhost:3700/instructors';
+insUrl = 'http://localhost:3700/api/instructors';
  private baseUrl = 'http://localhost:3700/api/courses';
- private studentUrl = 'http://localhost:3000/api/students';
+  private studentUrl = 'http://localhost:3700/api/students'
 
   getAll(){
     return this.http.get(this.ApiUrl);
@@ -55,4 +56,22 @@ insUrl = 'http://localhost:3700/instructors';
   getStudents(){
     return this.http.get(this.studentUrl);
   }
+  getInstructorById(id: string): Observable<any> {
+  return this.http.get(`http://localhost:3700/api/instructors/${id}`);
+}
+  /* instructor */
+ // instructor.service.ts
+updateInstructor(id: string, data: any): Observable<any> {
+  return this.http.put(`http://localhost:3700/api/instructors/${id}`, data);
+}
+
+deleteInstructor(id: string): Observable<any> {
+  return this.http.delete(`http://localhost:3700/api/instructors/${id}`);
+}
+
+createInstructor(instructor: any) {
+  return this.http.post('/api/instructors', instructor);
+}
+
+
 }

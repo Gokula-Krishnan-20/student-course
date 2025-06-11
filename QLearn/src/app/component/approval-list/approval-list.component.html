@@ -1,3 +1,4 @@
+<app-nav-admin></app-nav-admin>
 <div class="container mt-5"  *ngIf="roles !== 'Student'">
   <h4 class="text-center mb-3">Add New Course</h4>
   <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="border p-4 rounded bg-light shadow-sm">

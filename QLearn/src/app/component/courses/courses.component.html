@@ -21,7 +21,9 @@
         (change)="search()"
         aria-label="Select Department"
       >
-        <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+        <option *ngFor="let dept of departments" [value]="dept">
+          {{ dept }}
+        </option>
       </select>
     </div>
   </div>
@@ -51,10 +53,11 @@
           <p><strong>Modules:</strong> {{ course.modules.length }}</p>
 
           <div class="mt-auto d-flex justify-content-between">
-            <!-- ✅ Dynamic Enroll/Unenroll Button -->
             <button
               class="btn"
-              [ngClass]="isEnrolled(course.courseCode) ? 'btn-danger' : 'btn-success'"
+              [ngClass]="
+                isEnrolled(course.courseCode) ? 'btn-danger' : 'btn-success'
+              "
               (click)="
                 isEnrolled(course.courseCode)
                   ? confirmUnenroll(course.courseCode)
@@ -64,7 +67,6 @@
               {{ isEnrolled(course.courseCode) ? 'Unenroll' : 'Enroll' }}
             </button>
 
-            <!-- 🔗 View Course -->
             <a
               [routerLink]="[course.courseCode]"
               class="btn btn-outline-secondary btn-sm"
@@ -73,6 +75,13 @@
             </a>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- 🔄 Loading Spinner -->
+    <div class="text-center my-4" *ngIf="loadingMore">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
     </div>
   </div>

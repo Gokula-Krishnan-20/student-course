@@ -27,6 +27,7 @@
     "jwt-decode": "^4.0.0",
     "ngx-echarts": "^19.0.0",
     "ngx-extended-pdf-viewer": "^23.3.1",
+    "ngx-infinite-scroll": "^9.1.0",
     "ngx-pagination": "^6.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

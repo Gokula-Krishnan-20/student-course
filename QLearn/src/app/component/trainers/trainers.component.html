@@ -1,27 +1,4 @@
-<!-- <div class="container-fluid row">
-  <h4 class="text-center p-2">Instructor List</h4>
-  <div class="col-md-4 mb-4" *ngFor="let instructor of instructors" data-aos="fade-up" data-aos-duration="800">
-    <div class="card">
-      <div class="card-body">
-        
-        <h5 class="card-title text-primary mt-3">{{ instructor.name }}</h5>
-        <p class="card-text">
-          <strong>Email:</strong> {{ instructor.email }}<br>
-          <strong>Department:</strong> {{ instructor.department }}<br>
-          <strong>ID:</strong> {{ instructor.instructorId }}<br>
-   
-        </p>
-      </div>
-      <div class="card-footer bg-white border-0">
-        <button (click)="viewProfile(instructor)" class="btn btn-outline-primary btn-sm w-100">View Profile</button>
-      </div>
-    </div>
-  </div>
-</div>
- -->
-
-<!-- Simple Bootstrap Modal -->
- <app-nav-admin></app-nav-admin>
+<app-nav-admin></app-nav-admin>
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true"  *ngIf="roles !== 'Student'">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content p-3">
@@ -77,9 +54,18 @@
           <button (click)="viewProfile(instructor)" class="btn btn-outline-primary btn-sm w-100">
             View Profile
           </button>
+            <button (click)="editProfile(instructor)" class="btn btn-outline-primary btn-sm w-50">
+    Edit Profile
+  </button>
+   <button type="button" class="btn btn-outline-primary btn-sm w-50" (click)="onDelete(instructor.instructorId)">Delete</button>
+
+
+  <div class="d-flex justify-content-between">
+
+ </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
-

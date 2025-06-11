@@ -1,264 +1,171 @@
-<!-- <div class="container-fluid row"  *ngIf="roles !== 'Student'">
-  <h1 class="text-center col-md-6">Courses</h1>
-  <div class="col-md-3"></div>
-  <button class="btn btn-primary col-md-2" style="width: 200px; margin-left: 65px;" (click)="openDialog()">Create courses!</button>
-</div>
 
-<div class="container mt-4"  *ngIf="roles !== 'Student'">
-  <h3 class="mb-3 text-center">📘 Course List</h3>
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped">
-      <thead class="table-primary">
-        <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Department</th>
-          <th>Instructor</th>
-          <th>Modules</th>
-          <th>Category</th>
-          <th>Duration</th>
-          <th>Rating</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let course of courses">
-          <td>{{ course.title }}</td>
-          <td>{{ course.description }}</td>
-          <td>{{ course.department }}</td>
-          <td>{{ course.instructor }}</td>
-          <td>
-            <ul *ngIf="course.modules && course.modules.length > 0">
-              <li *ngFor="let mod of course.modules">
-                <strong>{{ mod.title }}</strong>: {{ mod.description }}
-              </li>
-            </ul>
-          </td>
-          <td>{{ course.category }}</td>
-          <td>{{ course.duration }}</td>
-          <td>{{ course.rating }}</td>
-          <td>
-            <button class="btn btn-sm btn-primary me-2" [routerLink]="['/list', course._id]">Edit</button>
-            <button class="btn btn-sm btn-danger" (click)="deleteCourse(course._id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-
-
-
-<div class="container mt-4"  *ngIf="roles !== 'Student'">
-  <div class="row">
-    <div *ngFor="let course of courses" class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">{{ course.title }}</h5>
-          <p class="card-text"><strong>Description:</strong> {{ course.description }}</p>
-          <p class="card-text"><strong>Department:</strong> {{ course.department }}</p>
-          <p class="card-text"><strong>Instructor:</strong> {{ course.instructor }}</p>
-          <div *ngIf="course.modules && course.modules.length > 0">
-            <p class="card-text"><strong>Modules:</strong></p>
-            <ul>
-              <li *ngFor="let mod of course.modules">
-                <strong>{{ mod.title }}</strong>: {{ mod.description }}
-              </li>
-            </ul>
-          </div>
-          <p class="card-text"><strong>Category:</strong> {{ course.category }}</p>
-          <p class="card-text"><strong>Duration:</strong> {{ course.duration }}</p>
-          <p class="card-text"><strong>Rating:</strong> {{ course.rating }}</p>
-          <button class="btn btn-primary me-2" [routerLink]="['/list', course._id]">Edit</button>
-          <button class="btn btn-danger" (click)="deleteCourse(course._id)">Delete</button>
-        </div>
+ <app-nav-admin></app-nav-admin>
+<!-- Course Management UI -->
+<div class="main-content" >
+      <div class="container-fluid" *ngIf="roles !== 'Student'">
+ 
+            <!-- Search and Create Toolbar -->
+            <div class="toolbar">
+                  <div class="toolbar-actions">
+                        <mat-form-field class="equal-width mat-mdc-text-field-wrapper" appearance="outline">
+                              <mat-label>Search Courses</mat-label>
+                              <input matInput placeholder="Course name, department, instructor"
+                                    [(ngModel)]="filterValue" (keyup)="applyFilter()" />
+                        </mat-form-field>
+ 
+                        <button mat-raised-button color="primary" class="equal-width" (click)="createNew()">
+                              Add New Course
+                        </button>
+                  </div>
+            </div>
+ 
+            <!-- Course Table -->
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table table">
+ 
+                  <!-- Course Name -->
+                  <ng-container matColumnDef="courseName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Course Name</th>
+                        <td mat-cell *matCellDef="let r">
+                              <ng-container *ngIf="r._editing; else readCourseName">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                          <input matInput placeholder="Course Name" [(ngModel)]="r.courseName"
+                                                name="courseName" required pattern=".*[a-zA-Z].*" />
+                                          <mat-error *ngIf="!r.courseName">Course name is required</mat-error>
+                                          <mat-error *ngIf="hasOnlySymbolsOrNumbers(r.course)">
+                                                Course name must contain at least one alphabet.
+                                          </mat-error>
+ 
+                                    </mat-form-field>
+                              </ng-container>
+                              <ng-template #readCourseName>{{ r.courseName }}</ng-template>
+                        </td>
+                  </ng-container>
+ 
+                  <!-- Course Code -->
+                  <ng-container matColumnDef="courseCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td mat-cell *matCellDef="let r">
+                              <ng-container *ngIf="r._editing; else readCode">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                          <input matInput placeholder="Code" [(ngModel)]="r.courseCode"
+                                                name="courseCode" required pattern=".*[a-zA-Z].*" />
+                                          <mat-error *ngIf="!r.courseCode">Course code is required</mat-error>
+                                          <mat-error *ngIf="hasOnlySymbolsOrNumbers(r.courseCode)">
+                                                CourseCode name must contain at least one alphabet.
+                                          </mat-error>
+ 
+                                    </mat-form-field>
+                              </ng-container>
+                              <ng-template #readCode>{{ r.courseCode }}</ng-template>
+                        </td>
+                  </ng-container>
+ 
+                  <!-- Department -->
+                  <ng-container matColumnDef="department">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+                        <td mat-cell *matCellDef="let r">
+                              <ng-container *ngIf="r._editing; else readDept">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                          <input matInput placeholder="Department" [(ngModel)]="r.department"
+                                                name="department" required pattern=".*[a-zA-Z].*" />
+                                          <mat-error *ngIf="!r.department">Department is required</mat-error>
+                                          <mat-error *ngIf="hasOnlySymbolsOrNumbers(r.department)">
+                                                Department name must contain at least one alphabet.
+                                          </mat-error>
+ 
+                                    </mat-form-field>
+                              </ng-container>
+                              <ng-template #readDept>{{ r.department }}</ng-template>
+                        </td>
+                  </ng-container>
+ 
+                  <!-- Instructor -->
+                  <ng-container matColumnDef="instructorId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Instructor</th>
+                        <td mat-cell *matCellDef="let r">
+                              <ng-container *ngIf="r._editing; else readInstructor">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                          <mat-select [(ngModel)]="r.instructorId" required>
+                                                <mat-option *ngFor="let instructor of instructors"
+                                                      [value]="instructor.instructorId">
+                                                      {{ instructor.instructorId }} - {{ instructor.name }}
+                                                </mat-option>
+                                          </mat-select>
+                                          <mat-error *ngIf="!r.instructorId">Instructor is required</mat-error>
+                                    </mat-form-field>
+                              </ng-container>
+                              <ng-template #readInstructor>{{ getInstructorName(r) }}</ng-template>
+                        </td>
+                  </ng-container>
+ 
+                  <!-- Enroll Start -->
+                  <ng-container matColumnDef="enrollStart">
+                        <th mat-header-cell *matHeaderCellDef>Enroll Start</th>
+                        <td mat-cell *matCellDef="let r">
+                              <ng-container *ngIf="r._editing; else readStart">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                          <input matInput [matDatepicker]="startPicker" [(ngModel)]="r.enrollStart"
+                                                name="enrollStart" required [min]="minDate" />
+                                          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                                          <mat-datepicker #startPicker></mat-datepicker>
+                                          <mat-error *ngIf="!r.enrollStart">Start date is required</mat-error>
+                                    </mat-form-field>
+                              </ng-container>
+                              <ng-template #readStart>{{ r.enrollStart | date: 'mediumDate' }}</ng-template>
+                        </td>
+                  </ng-container>
+ 
+                  <!-- Enroll End -->
+                  <ng-container matColumnDef="enrollEnd">
+                        <th mat-header-cell *matHeaderCellDef>Enroll End</th>
+                        <td mat-cell *matCellDef="let r">
+                              <ng-container *ngIf="r._editing; else readEnd">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                          <input matInput [matDatepicker]="endPicker" [(ngModel)]="r.enrollEnd"
+                                                name="enrollEnd" required [min]="r.enrollStart" />
+                                          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                                          <mat-datepicker #endPicker></mat-datepicker>
+                                          <mat-error *ngIf="!r.enrollEnd">End date is required</mat-error>
+                                    </mat-form-field>
+                              </ng-container>
+                              <ng-template #readEnd>{{ r.enrollEnd | date: 'mediumDate' }}</ng-template>
+                        </td>
+                  </ng-container>
+ 
+                  <!-- Actions -->
+                  <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let r">
+                              <ng-container *ngIf="r._editing">
+                                    <button mat-icon-button (click)="r._new ? addNewRow(r) : saveEdit(r)">
+                                          <mat-icon class="icon-save">save</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="cancelEdit(r)">
+                                          <mat-icon class="icon-cancel">cancel</mat-icon>
+                                    </button>
+                              </ng-container>
+                              <ng-container *ngIf="!r._editing">
+                                    <button mat-icon-button (click)="viewModules(r)">
+                                          <mat-icon class="icon-view">visibility</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="startEdit(r)">
+                                          <mat-icon class="icon-edit">edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="confirmDelete(r)">
+                                          <mat-icon class="icon-delete">delete</mat-icon>
+                                    </button>
+                              </ng-container>
+                        </td>
+                  </ng-container>
+ 
+                  <!-- Table Rows -->
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let r; columns: displayedColumns;"></tr>
+            </table>
+ 
+            <!-- Paginator -->
+            <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+ 
       </div>
-    </div>
-  </div>
-</div> -->
-<!-- 
-<ng-template #noCourses>
-  <div class="text-center text-muted mt-4">
-    <p>No courses available at the moment.</p>
-  </div>
-</ng-template>
-
-<router-outlet></router-outlet>
-
-<div class="container mt-3">
-  <h4 class="text-center mb-3">{{ isEditMode ? 'Update Course' : 'Add New Course' }}</h4>
-
-  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="border p-4 rounded bg-light shadow-sm">
-
-    <div class="form-group mb-3">
-      <label>Title</label>
-      <input formControlName="title" class="form-control" type="text" required>
-    </div>
-
-    <div class="form-group mb-3">
-      <label>Description</label>
-      <textarea formControlName="description" class="form-control" required></textarea>
-    </div>
-
-    <div class="form-group mb-3">
-      <label>Department</label>
-      <input formControlName="department" class="form-control" type="text" required>
-    </div>
-
-    <div class="form-group mb-3">
-      <label>Instructor</label>
-      <input formControlName="instructor" class="form-control" type="text" required>
-    </div>
-
-    <div formArrayName="modules" class="mb-3">
-      <label>Modules</label>
-      <div *ngFor="let module of modules.controls; let i = index" [formGroupName]="i" class="border p-2 rounded mb-2 bg-white">
-        <input formControlName="title" placeholder="Module Title" class="form-control mb-1" required />
-        <textarea formControlName="description" placeholder="Module Description" class="form-control mb-1" required></textarea>
-        <button type="button" class="btn btn-danger btn-sm" (click)="removeModule(i)">Remove Module</button>
-      </div>
-      <button type="button" class="btn btn-primary btn-sm mt-2" (click)="addModule()">Add Module</button>
-    </div>
-
-    <div class="form-group mb-3">
-      <label>Category</label>
-      <input formControlName="category" class="form-control" type="text">
-    </div>
-
-    <div class="form-group mb-3">
-      <label>Duration</label>
-      <input formControlName="duration" class="form-control" type="text">
-    </div>
-
-    <div class="form-group mb-3">
-      <label>Rating</label>
-      <input formControlName="rating" class="form-control" type="number" min="0" max="5">
-    </div>
-
-    <button class="btn btn-success w-100" type="submit">
-      {{ isEditMode ? 'Update Course' : 'Add Course' }}
-    </button>
-  </form>
-</div> -->
-<app-nav-admin></app-nav-admin>
-<div class="container-fluid"  *ngIf="roles !== 'Student'">
-  <div class="toolbar">
-    <div class="toolbar-actions">
-      <mat-form-field class="equal-width" appearance="outline">
-        <mat-label>Search Courses</mat-label>
-        <input
-          matInput
-          placeholder="Course name, department, instructor"
-          [(ngModel)]="filterValue"
-          (keyup)="applyFilter()"
-        />
-      </mat-form-field>
-
-      <button mat-raised-button color="primary" class="equal-width" (click)="createNew()">
-        Add New Course
-      </button>
-    </div>
-  </div>
-
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
-
-    <!-- Course Name -->
-    <ng-container matColumnDef="courseName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Course Name</th>
-      <td mat-cell *matCellDef="let r">
-        <ng-container *ngIf="r._editing; else readCourseName">
-          <input matInput [(ngModel)]="r.courseName" placeholder="Course Name" />
-        </ng-container>
-        <ng-template #readCourseName>{{ r.courseName }}</ng-template>
-      </td>
-    </ng-container>
-
-    <!-- Course Code -->
-    <ng-container matColumnDef="courseCode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
-      <td mat-cell *matCellDef="let r">
-        <ng-container *ngIf="r._editing; else readCode">
-          <input matInput [(ngModel)]="r.courseCode" placeholder="Code" />
-        </ng-container>
-        <ng-template #readCode>{{ r.courseCode }}</ng-template>
-      </td>
-    </ng-container>
-
-    <!-- Department -->
-    <ng-container matColumnDef="department">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
-      <td mat-cell *matCellDef="let r">
-        <ng-container *ngIf="r._editing; else readDept">
-          <input matInput [(ngModel)]="r.department" placeholder="Department" />
-        </ng-container>
-        <ng-template #readDept>{{ r.department }}</ng-template>
-      </td>
-    </ng-container>
-
-    <!-- Instructor -->
-    <ng-container matColumnDef="instructorId">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Instructor</th>
-      <td mat-cell *matCellDef="let r">
-        <ng-container *ngIf="r._editing; else readInstructor">
-          <input matInput [(ngModel)]="r.instructorId" placeholder="Instructor ID" />
-        </ng-container>
-        <ng-template #readInstructor>{{ r.instructorId }}</ng-template>
-      </td>
-    </ng-container>
-
-    <!-- Enrollment Start -->
-    <ng-container matColumnDef="enrollStart">
-      <th mat-header-cell *matHeaderCellDef>Enroll Start</th>
-      <td mat-cell *matCellDef="let r">
-        <ng-container *ngIf="r._editing; else readStart">
-          <input type="date" matInput [(ngModel)]="r.enrollStart" [min]="minDate" />
-        </ng-container>
-        <ng-template #readStart>{{ r.enrollStart | date: 'mediumDate' }}</ng-template>
-      </td>
-    </ng-container>
-
-    <!-- Enrollment End -->
-    <ng-container matColumnDef="enrollEnd">
-      <th mat-header-cell *matHeaderCellDef>Enroll End</th>
-      <td mat-cell *matCellDef="let r">
-        <ng-container *ngIf="r._editing; else readEnd">
-          <input type="date" matInput [(ngModel)]="r.enrollEnd" [min]="minDate" />
-        </ng-container>
-        <ng-template #readEnd>{{ r.enrollEnd | date: 'mediumDate' }}</ng-template>
-      </td>
-    </ng-container>
-
-    <!-- Actions -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let r">
-        <ng-container *ngIf="r._editing">
-          <button mat-icon-button (click)="r._new ? addNewRow(r) : saveEdit(r)">
-            <mat-icon class="icon-save">save</mat-icon>
-          </button>
-          <button mat-icon-button (click)="cancelEdit(r)">
-            <mat-icon class="icon-cancel">cancel</mat-icon>
-          </button>
-        </ng-container>
-        <ng-container *ngIf="!r._editing">
-          <button mat-icon-button (click)="viewModules(r)">
-            <mat-icon class="icon-view">visibility</mat-icon>
-          </button>
-          <button mat-icon-button (click)="startEdit(r)">
-            <mat-icon class="icon-edit">edit</mat-icon>
-          </button>
-          <button mat-icon-button (click)="confirmDelete(r)">
-            <mat-icon class="icon-delete">delete</mat-icon>
-          </button>
-        </ng-container>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let r; columns: displayedColumns;"></tr>
-  </table>
-
-  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
+ 
